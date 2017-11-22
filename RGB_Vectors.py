@@ -1,9 +1,13 @@
+# this file 
+
 from scipy import misc
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+
+# specify the folder of your images, and consider specifying other folder for the ground images in the for loop
 training_path = "/home/ahmed/Melanoma/Testing_temp"
-# ground_path = "/home/ahmed/Melanoma/ground_temp"
+
 
 listing = os.listdir(training_path)
 red_vector_foreground = []
@@ -26,6 +30,7 @@ backpixelsblue = []
 i = 1
 for image in listing:
     x_image = misc.imread(training_path + "/" + image)
+    # the following lines are to get the corresponding ground image from the ground truth folder
     gnd = training_path + "/" + image.replace(".jpg","")
     gnd = gnd.replace("Testing_temp", "ground_temp")
     y_image = misc.imread(gnd + "_Segmentation.png")
