@@ -77,7 +77,7 @@ def reproject_image_into_polar(data, origin):
 
 
 path = "/home/ahmed/melanoma_data/ISBI2016_ISIC_Part1_Training_Data"
-img = "ISIC_0000026.jpg"
+img = "ISIC_0000000.jpg"
 
 listing = sorted(os.listdir(path))
 # for img in listing:
