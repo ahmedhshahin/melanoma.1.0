@@ -77,8 +77,11 @@ def reproject_image_into_polar(data, origin):
 
 
 path = "/home/ahmed/melanoma_data/ISBI2016_ISIC_Part1_Training_Data"
-img = "ISIC_0000000.jpg"
-# img = "ISIC_" + sys.argv[1] + ".jpg"
+# img = "ISIC_0000000.jpg"
+x = sys.argv[1]
+img = (7 - len(x)) * '0' + x
+img = "ISIC_" + img + ".jpg"
+
 
 listing = sorted(os.listdir(path))
 # for img in listing:
@@ -112,8 +115,8 @@ i = 0
 
 polar_grid, r, theta = reproject_image_into_polar(x_img, (seed,seed))
 
-thresholds = np.zeros((7, 2))
-for angle in range(-3,4):
+thresholds = np.zeros((13, 2))
+for angle in np.arange(-3,3.5,0.5):
     xu, yu = polar2cart(r, angle)
     xu += seed
     yu = seed - yu
