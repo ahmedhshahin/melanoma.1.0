@@ -77,7 +77,7 @@ def reproject_image_into_polar(data, origin):
 
 
 path = "/home/ahmed/melanoma_data/ISBI2016_ISIC_Part1_Training_Data"
-img = "ISIC_0000000.jpg"
+img = "ISIC_0000026.jpg"
 
 listing = sorted(os.listdir(path))
 # for img in listing:
@@ -107,6 +107,7 @@ else:
 #     wrong.append(img)
 # print(i)
 # i = i + 1
+i = 0
 
 polar_grid, r, theta = reproject_image_into_polar(x_img, (seed,seed))
 
@@ -114,34 +115,73 @@ thresholds = np.zeros((7, 2))
 for angle in range(-3,4):
     xu, yu = polar2cart(r, angle)
     xu += seed
-    yu += seed
-    xu = xu.astype(int)
-    yu = yu.astype(int)
-    xu = xu[xu < b]
-    yu = yu[yu < a]
-    xu = xu[0: min(len(xu),len(yu))]
-    yu = yu[0: min(len(xu),len(yu))]
+    yu = seed - yu
+    try:
+        th_y = np.where(yu < 0)[0][0]
+    except:
+        th_y = len(yu) - 1
+    try:
+        th_x = np.where(xu < 0)[0][0]
+    except:
+        th_x = len(xu) - 1
+    ynew = yu[0 : min(th_x, th_y)]
+    xnew = xu[0 : min(th_x, th_y)]
+    ynew = ynew.astype(int)
+    xnew = xnew.astype(int)
+    xnew = xnew[xnew < b]
+    ynew = ynew[ynew < a]
+    xnew = xnew[0: min(len(xnew), len(ynew))]
+    ynew = ynew[0: min(len(xnew), len(ynew))]
 
-    to_plot = gaussian_filter1d(x_img[yu, xu, 2],25)
-#     plt.plot(to_plot)
-#     plt.show()
-    temp = int(0.4 * max(to_plot))
+#     print(min(xnew), min(ynew))
+
+    to_plot = gaussian_filter1d(x_img[ynew, xnew, 2],25)
+    # plt.plot(to_plot)
+    # plt.show()
+    m = max(to_plot) - min(to_plot)
+    temp = int(0.4 * (max(to_plot) - min(to_plot)) + min(to_plot))
+
+#     print(temp)
 
     y = to_plot[0:np.where(to_plot == max(to_plot))[0][0]]
     x = np.arange(len(y))
     f = sp.interpolate.interp1d(y, x)
     threshold_id = int(f(temp))
 
-    thresh_x = xu[threshold_id]
-    thresh_y = yu[threshold_id]
+#     print(threshold_id)
+
+    thresh_x = xnew[threshold_id]
+    thresh_y = ynew[threshold_id]
+
+#     print(thresh_x, thresh_y)
 
     thresh = int(cart2polar(thresh_x - seed, thresh_y - seed)[0] * 1.5)
-    
-    thresholds[angle + 3, 0] = polar2cart(thresh, angle)[1] + seed
-    thresholds[angle + 3, 1] = polar2cart(thresh, angle)[0] + seed
-    
+
+#     print(thresh)
+
+    if (seed - polar2cart(thresh, angle)[1] < 0):
+        thresholds[i, 0] = 0
+    else:
+        thresholds[i, 0] = seed - polar2cart(thresh, angle)[1]
+
+    if (seed + polar2cart(thresh, angle)[0] < 0):
+        thresholds[i, 1] = 0
+    else:
+        thresholds[i, 1] = seed + polar2cart(thresh, angle)[0]
+
+
+    # thresholds[i, 1] = seed + polar2cart(thresh, angle)[0]
+    i = i + 1
+    # thresholds[i, 0] = thresh_y
+    # thresholds[i, 1] = thresh_x
+
     thresholds = thresholds.astype(int)
 
-plt.imshow(x_img[min(thresholds[:,0]):max(thresholds[:,0]),min(thresholds[:,1]):max(thresholds[:,1])])
-
-
+out = (x_img[min(thresholds[:,0]):max(thresholds[:,0]),min(thresholds[:,1]):max(thresholds[:,1])])
+plt.subplot(2, 2, 1)
+plt.imshow(x_img)
+plt.axis('off')
+plt.subplot(2, 2, 2)
+plt.imshow(out)
+plt.axis('off')
+plt.show()
