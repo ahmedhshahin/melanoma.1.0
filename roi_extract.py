@@ -1,4 +1,4 @@
-import os
+import os, sys
 from scipy import misc
 import numpy as np
 from skimage.color import rgb2gray
@@ -78,6 +78,7 @@ def reproject_image_into_polar(data, origin):
 
 path = "/home/ahmed/melanoma_data/ISBI2016_ISIC_Part1_Training_Data"
 img = "ISIC_0000000.jpg"
+# img = "ISIC_" + sys.argv[1] + ".jpg"
 
 listing = sorted(os.listdir(path))
 # for img in listing:
@@ -136,15 +137,17 @@ for angle in range(-3,4):
 #     print(min(xnew), min(ynew))
 
     to_plot = gaussian_filter1d(x_img[ynew, xnew, 2],25)
-    # plt.plot(to_plot)
-    # plt.show()
-    m = max(to_plot) - min(to_plot)
-    temp = int(0.4 * (max(to_plot) - min(to_plot)) + min(to_plot))
+#     plt.plot(to_plot)
+#     plt.show()
+#     m = max(to_plot) - min(to_plot)
+#     temp = int(0.4 * (max(to_plot) - min(to_plot)) + min(to_plot))
 
 #     print(temp)
 
     y = to_plot[0:np.where(to_plot == max(to_plot))[0][0]]
     x = np.arange(len(y))
+    m = max(y) - min(y)
+    temp = int(0.4 * (max(y) - min(y)) + min(y))
     f = sp.interpolate.interp1d(y, x)
     threshold_id = int(f(temp))
 
