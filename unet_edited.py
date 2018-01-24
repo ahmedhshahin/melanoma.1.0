@@ -438,6 +438,7 @@ class Trainer(object):
                 self.output_epoch_stats(epoch, total_loss, training_iters, lr)
                 self.store_prediction(sess, test_x, test_y, "epoch_%s"%epoch)
                 self.avg_loss_total.append((total_loss / training_iters))
+		print("HIIIIII")
 		plt.plot(self.avg_loss_total)
                 save_path = self.net.save(sess, save_path)
             logging.info("Optimization Finished!")
