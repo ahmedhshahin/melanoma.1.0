@@ -311,9 +311,8 @@ class Trainer(object):
         self.batch_size = batch_size
         self.norm_grads = norm_grads
         self.optimizer = optimizer
-        self.opt_kwargs = opt_kwargs
         self.avg_loss_total = []
-
+        self.opt_kwargs = opt_kwargs
 
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
