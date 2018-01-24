@@ -413,7 +413,7 @@ class Trainer(object):
             pred_shape = self.store_prediction(sess, test_x, test_y, "_init")
             
             summary_writer = tf.summary.FileWriter(output_path, graph=sess.graph)
-            logging.info("Start optimization")
+            logging.info("AHMED Start optimization")
             
             avg_gradients = None
             for epoch in range(epochs):
