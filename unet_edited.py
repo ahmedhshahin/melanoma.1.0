@@ -181,6 +181,7 @@ class Unet(object):
         
         self.n_class = n_class
         self.summaries = kwargs.get("summaries", True)
+
         
         self.x = tf.placeholder("float", shape=[None, None, None, channels])
         self.y = tf.placeholder("float", shape=[None, None, None, n_class])
@@ -310,7 +311,7 @@ class Trainer(object):
         self.norm_grads = norm_grads
         self.optimizer = optimizer
         self.opt_kwargs = opt_kwargs
-        
+	self.avg_loss_total = []
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
             learning_rate = self.opt_kwargs.pop("learning_rate", 0.2)
@@ -388,7 +389,7 @@ class Trainer(object):
         :param write_graph: Flag if the computation graph should be written as protobuf file to the output path
         :param prediction_path: path where to save predictions on each epoch
         """
-	avg_loss_total = []
+
         save_path = os.path.join(output_path, "model.cpkt")
         if epochs == 0:
             return save_path
@@ -436,7 +437,8 @@ class Trainer(object):
 
                 self.output_epoch_stats(epoch, total_loss, training_iters, lr)
                 self.store_prediction(sess, test_x, test_y, "epoch_%s"%epoch)
-                avg_loss_total.append((total_loss / training_iters))
+                self.avg_loss_total.append((total_loss / training_iters))
+		plt.plot(self.avg_loss_total)
                 save_path = self.net.save(sess, save_path)
             logging.info("Optimization Finished!")
             
