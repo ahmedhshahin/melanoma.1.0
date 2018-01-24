@@ -311,7 +311,7 @@ class Trainer(object):
         self.batch_size = batch_size
         self.norm_grads = norm_grads
         self.optimizer = optimizer
-        self.avg_loss_total = []
+        self.avg_loss_total = np.zeros(100)
         self.opt_kwargs = opt_kwargs
 
     def _get_optimizer(self, training_iters, global_step):
@@ -439,7 +439,7 @@ class Trainer(object):
 
                 self.output_epoch_stats(epoch, total_loss, training_iters, lr)
                 self.store_prediction(sess, test_x, test_y, "epoch_%s"%epoch)
-                self.avg_loss_total.append((total_loss / training_iters))
+                self.avg_loss_total[epoch] = ((total_loss / training_iters))
                 plt.plot(self.avg_loss_total)
                 save_path = self.net.save(sess, save_path)
             logging.info("Optimization Finished!")
