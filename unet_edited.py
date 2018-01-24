@@ -26,6 +26,7 @@ from collections import OrderedDict
 import logging
 
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 from tf_unet import util
 from tf_unet.layers import (weight_variable, weight_variable_devonc, bias_variable, 
@@ -311,7 +312,7 @@ class Trainer(object):
         self.norm_grads = norm_grads
         self.optimizer = optimizer
         self.opt_kwargs = opt_kwargs
-	self.avg_loss_total = []
+	    self.avg_loss_total = []
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
             learning_rate = self.opt_kwargs.pop("learning_rate", 0.2)
@@ -438,8 +439,7 @@ class Trainer(object):
                 self.output_epoch_stats(epoch, total_loss, training_iters, lr)
                 self.store_prediction(sess, test_x, test_y, "epoch_%s"%epoch)
                 self.avg_loss_total.append((total_loss / training_iters))
-		print("HIIIIII")
-		plt.plot(self.avg_loss_total)
+        		plt.plot(self.avg_loss_total)
                 save_path = self.net.save(sess, save_path)
             logging.info("Optimization Finished!")
             
