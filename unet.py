@@ -26,7 +26,6 @@ from collections import OrderedDict
 import logging
 
 import tensorflow as tf
-import matplotlib.pyplot as plt
 
 from tf_unet import util
 from tf_unet.layers import (weight_variable, weight_variable_devonc, bias_variable, 
@@ -118,6 +117,7 @@ def create_conv_net(x, keep_prob, channels, n_class, layers=3, features_root=16,
         b2 = bias_variable([features//2])
         
         conv1 = conv2d(h_deconv_concat, w1, keep_prob)
+
         h_conv = tf.nn.relu(conv1 + b1)
         conv2 = conv2d(h_conv, w2, keep_prob)
         in_node = tf.nn.relu(conv2 + b2)
@@ -182,7 +182,6 @@ class Unet(object):
         
         self.n_class = n_class
         self.summaries = kwargs.get("summaries", True)
-
         
         self.x = tf.placeholder("float", shape=[None, None, None, channels])
         self.y = tf.placeholder("float", shape=[None, None, None, n_class])
@@ -263,7 +262,7 @@ class Unet(object):
             # Restore model weights from previously saved model
             self.restore(sess, model_path)
             
-            y_dummy = np.empty((x_test.shape[0], x_test.shape[1] , self.n_class))
+            y_dummy = np.empty((x_test.shape[0], x_test.shape[1], x_test.shape[2], self.n_class))
             prediction = sess.run(self.predicter, feed_dict={self.x: x_test, self.y: y_dummy, self.keep_prob: 1.})
             
         return prediction
@@ -311,12 +310,11 @@ class Trainer(object):
         self.batch_size = batch_size
         self.norm_grads = norm_grads
         self.optimizer = optimizer
-        self.avg_loss_total = np.zeros(100)
         self.opt_kwargs = opt_kwargs
-
+        
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.2)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.01)
             decay_rate = self.opt_kwargs.pop("decay_rate", 0.95)
             momentum = self.opt_kwargs.pop("momentum", 0.2)
             
@@ -391,7 +389,6 @@ class Trainer(object):
         :param write_graph: Flag if the computation graph should be written as protobuf file to the output path
         :param prediction_path: path where to save predictions on each epoch
         """
-
         save_path = os.path.join(output_path, "model.cpkt")
         if epochs == 0:
             return save_path
@@ -413,7 +410,7 @@ class Trainer(object):
             pred_shape = self.store_prediction(sess, test_x, test_y, "_init")
             
             summary_writer = tf.summary.FileWriter(output_path, graph=sess.graph)
-            logging.info("AHMED Start optimization")
+            logging.info("Start optimization")
             
             avg_gradients = None
             for epoch in range(epochs):
@@ -439,8 +436,7 @@ class Trainer(object):
 
                 self.output_epoch_stats(epoch, total_loss, training_iters, lr)
                 self.store_prediction(sess, test_x, test_y, "epoch_%s"%epoch)
-                self.avg_loss_total[epoch] = ((total_loss / training_iters))
-                plt.plot(self.avg_loss_total)
+                    
                 save_path = self.net.save(sess, save_path)
             logging.info("Optimization Finished!")
             
@@ -460,12 +456,13 @@ class Trainer(object):
                                                                           util.crop_to_shape(batch_y,
                                                                                              prediction.shape)),
                                                                           loss))
-              
-        img = util.combine_img_prediction(batch_x, batch_y, prediction)
-        util.save_image(img, "%s/%s.jpg"%(self.prediction_path, name))
+        for i in range(self.verification_batch_size):
+            util.save_image(img, i, "%s/%s.jpg" % (self.prediction_path, name))
+        # img = util.combine_img_prediction(batch_x, batch_y, prediction)
+        # util.save_image(img, "%s/%s.jpg"%(self.prediction_path, name))
         
         return pred_shape
-        
+    
     def output_epoch_stats(self, epoch, total_loss, training_iters, lr):
         logging.info("Epoch {:}, Average loss: {:.4f}, learning rate: {:.4f}".format(epoch, (total_loss / training_iters), lr))
     
