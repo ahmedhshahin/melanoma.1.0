@@ -117,7 +117,6 @@ def create_conv_net(x, keep_prob, channels, n_class, layers=3, features_root=16,
         b2 = bias_variable([features//2])
         
         conv1 = conv2d(h_deconv_concat, w1, keep_prob)
-
         h_conv = tf.nn.relu(conv1 + b1)
         conv2 = conv2d(h_conv, w2, keep_prob)
         in_node = tf.nn.relu(conv2 + b2)
@@ -314,7 +313,7 @@ class Trainer(object):
         
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.01)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.2)
             decay_rate = self.opt_kwargs.pop("decay_rate", 0.95)
             momentum = self.opt_kwargs.pop("momentum", 0.2)
             
@@ -456,10 +455,9 @@ class Trainer(object):
                                                                           util.crop_to_shape(batch_y,
                                                                                              prediction.shape)),
                                                                           loss))
-        for i in range(self.verification_batch_size):
-            util.save_image(img, i, "%s/%s.jpg" % (self.prediction_path, name))
-        # img = util.combine_img_prediction(batch_x, batch_y, prediction)
-        # util.save_image(img, "%s/%s.jpg"%(self.prediction_path, name))
+              
+        img = util.combine_img_prediction(batch_x, batch_y, prediction)
+        util.save_image(img, "%s/%s.jpg"%(self.prediction_path, name))
         
         return pred_shape
     
