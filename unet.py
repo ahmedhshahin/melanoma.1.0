@@ -454,7 +454,7 @@ class Trainer(object):
                                                        self.net.y: util.crop_to_shape(batch_y, pred_shape), 
                                                        self.net.keep_prob: 1.})
         
-        logging.info("Verification error= {:.1f}%, loss= {:.4f}".format(error_rate(prediction,
+        logging.info("VERrification error= {:.1f}%, loss= {:.4f}".format(error_rate(prediction,
                                                                           util.crop_to_shape(batch_y,
                                                                                              prediction.shape)),
                                                                           loss))
