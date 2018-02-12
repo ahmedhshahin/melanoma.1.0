@@ -314,7 +314,7 @@ class Trainer(object):
         
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.001)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.01)
             decay_rate = self.opt_kwargs.pop("decay_rate", 0.95)
             momentum = self.opt_kwargs.pop("momentum", 0.2)
             
