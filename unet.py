@@ -303,7 +303,7 @@ class Trainer(object):
     """
     
     verification_batch_size = 4
-    loss_array = []
+    loss_arr = []
     
     def __init__(self, net, batch_size=1, norm_grads=False, optimizer="momentum", opt_kwargs={}):
         self.net = net
@@ -314,7 +314,7 @@ class Trainer(object):
         
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.01)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.2)
             decay_rate = self.opt_kwargs.pop("decay_rate", 0.95)
             momentum = self.opt_kwargs.pop("momentum", 0.2)
             
@@ -436,10 +436,9 @@ class Trainer(object):
 
                 self.output_epoch_stats(epoch, total_loss, training_iters, lr)
                 self.store_prediction(sess, test_x, test_y, "epoch_%s"%epoch)
-
+                np.save('loss_array', self.loss_arr)
                     
                 save_path = self.net.save(sess, save_path)
-            np.save('loss', self.loss_array)
             logging.info("Optimization Finished!")
             
             return save_path
@@ -454,11 +453,11 @@ class Trainer(object):
                                                        self.net.y: util.crop_to_shape(batch_y, pred_shape), 
                                                        self.net.keep_prob: 1.})
         
-        logging.info("VERrification error= {:.1f}%, loss= {:.4f}".format(error_rate(prediction,
+        logging.info("Verification error= {:.1f}%, loss= {:.4f}".format(error_rate(prediction,
                                                                           util.crop_to_shape(batch_y,
                                                                                              prediction.shape)),
                                                                           loss))
-        self.loss_array.append(loss)
+        self.loss_arr.append(loss)
               
         img = util.combine_img_prediction(batch_x, batch_y, prediction)
         util.save_image(img, "%s/%s.jpg"%(self.prediction_path, name))
