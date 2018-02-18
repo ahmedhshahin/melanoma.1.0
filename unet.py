@@ -232,7 +232,7 @@ class Unet(object):
             prediction = pixel_wise_softmax_2(logits)
             intersection = tf.reduce_sum(prediction * self.y)
             union =  eps + tf.reduce_sum(prediction) + tf.reduce_sum(self.y)
-            loss = (2 * intersection/ (union))
+            loss = -(2 * intersection/ (union))
             
         else:
             raise ValueError("Unknown cost function: "%cost_name)
