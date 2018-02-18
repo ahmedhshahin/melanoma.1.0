@@ -176,7 +176,7 @@ class Unet(object):
     :param cost_kwargs: (optional) kwargs passed to the cost function. See Unet._get_cost for more options
     """
     
-    def __init__(self, channels=3, n_class=2, cost="cross_entropy", cost_kwargs={}, **kwargs):
+    def __init__(self, channels=3, n_class=2, cost="dice_coefficient", cost_kwargs={}, **kwargs):
         tf.reset_default_graph()
         
         self.n_class = n_class
@@ -289,6 +289,7 @@ class Unet(object):
         saver = tf.train.Saver()
         saver.restore(sess, model_path)
         logging.info("Model restored from file: %s" % model_path)
+
 
 class Trainer(object):
     """
