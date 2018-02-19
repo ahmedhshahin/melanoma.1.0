@@ -306,7 +306,7 @@ class Trainer(object):
     verification_batch_size = 4
     loss_arr = []
     
-    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="momentum", opt_kwargs={}):
+    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="adam", opt_kwargs={}):
         self.net = net
         self.batch_size = batch_size
         self.norm_grads = norm_grads
@@ -315,7 +315,7 @@ class Trainer(object):
         
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.1)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.01)
             decay_rate = self.opt_kwargs.pop("decay_rate", 0.95)
             momentum = self.opt_kwargs.pop("momentum", 0.2)
             
@@ -329,7 +329,7 @@ class Trainer(object):
                                                    **self.opt_kwargs).minimize(self.net.cost, 
                                                                                 global_step=global_step)
         elif self.optimizer == "adam":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.001)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.01)
             self.learning_rate_node = tf.Variable(learning_rate)
             
             optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_node, 
