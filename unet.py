@@ -49,7 +49,7 @@ def create_conv_net(x, keep_prob, channels, n_class, layers=3, features_root=16,
     :param summaries: Flag if summaries should be created
     """
     
-    logging.info("Layers {layers}, features {features}, filter size {filter_size}x{filter_size}, pool size: {pool_size}x{pool_size}".format(layers=layers,
+    logging.info("NO DROP Layers {layers}, features {features}, filter size {filter_size}x{filter_size}, pool size: {pool_size}x{pool_size}".format(layers=layers,
                                                                                                            features=features_root,
                                                                                                            filter_size=filter_size,
                                                                                                            pool_size=pool_size))
