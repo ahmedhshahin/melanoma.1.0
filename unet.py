@@ -176,7 +176,7 @@ class Unet(object):
     :param cost_kwargs: (optional) kwargs passed to the cost function. See Unet._get_cost for more options
     """
     
-    def __init__(self, channels=3, n_class=2, cost="dice_coefficient", cost_kwargs={}, **kwargs):
+    def __init__(self, channels=3, n_class=2, cost="cross_entropy", cost_kwargs={}, **kwargs):
         tf.reset_default_graph()
         
         self.n_class = n_class
@@ -304,7 +304,7 @@ class Trainer(object):
     
     verification_batch_size = 10
     
-    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="momentum", opt_kwargs={}):
+    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="adam", opt_kwargs={}):
         self.net = net
         self.batch_size = batch_size
         self.norm_grads = norm_grads
