@@ -238,9 +238,9 @@ class Unet(object):
             raise ValueError("Unknown cost function: "%cost_name)
 
         regularizer = cost_kwargs.pop("regularizer", None)
-        if regularizer is not None:
-            regularizers = sum([tf.nn.l2_loss(variable) for variable in self.variables])
-            loss += (regularizer * regularizers)
+        # if regularizer is not None:
+        #     regularizers = sum([tf.nn.l2_loss(variable) for variable in self.variables])
+        #     loss += (regularizer * regularizers)
             
         return loss
 
