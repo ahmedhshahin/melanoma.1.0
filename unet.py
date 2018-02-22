@@ -304,7 +304,7 @@ class Trainer(object):
     
     verification_batch_size = 4
     
-    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="adam", opt_kwargs={}):
+    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="momentum", opt_kwargs={}):
         self.net = net
         self.batch_size = batch_size
         self.norm_grads = norm_grads
