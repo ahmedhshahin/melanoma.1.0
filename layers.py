@@ -33,14 +33,13 @@ def bias_variable(shape):
     return tf.Variable(initial)
 
 def conv2d(x, W,keep_prob_):
-    print("WORKS")
-    conv_2d = tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
-    return tf.nn.dropout(conv_2d, keep_prob_)
+    conv_2d = tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='VALID')
+    return tf.layers.dropout(conv_2d, keep_prob_)
 
 def deconv2d(x, W,stride):
     x_shape = tf.shape(x)
     output_shape = tf.stack([x_shape[0], x_shape[1]*2, x_shape[2]*2, x_shape[3]//2])
-    return tf.nn.conv2d_transpose(x, W, output_shape, strides=[1, stride, stride, 1], padding='SAME')
+    return tf.nn.conv2d_transpose(x, W, output_shape, strides=[1, stride, stride, 1], padding='VALID')
 
 def max_pool(x,n):
     return tf.nn.max_pool(x, ksize=[1, n, n, 1], strides=[1, n, n, 1], padding='VALID')

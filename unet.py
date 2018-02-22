@@ -374,7 +374,7 @@ class Trainer(object):
         
         return init
 
-    def train(self, data_provider, output_path, training_iters=10, epochs=100, dropout=1, display_step=1, restore=False, write_graph=False, prediction_path = 'prediction'):
+    def train(self, data_provider, output_path, training_iters=10, epochs=100, dropout=0, display_step=1, restore=False, write_graph=False, prediction_path = 'prediction'):
         """
         Lauches the training process
         
@@ -444,12 +444,12 @@ class Trainer(object):
     def store_prediction(self, sess, batch_x, batch_y, name):
         prediction = sess.run(self.net.predicter, feed_dict={self.net.x: batch_x, 
                                                              self.net.y: batch_y, 
-                                                             self.net.keep_prob: 1.})
+                                                             self.net.keep_prob: 0.})
         pred_shape = prediction.shape
         
         loss = sess.run(self.net.cost, feed_dict={self.net.x: batch_x, 
                                                        self.net.y: util.crop_to_shape(batch_y, pred_shape), 
-                                                       self.net.keep_prob: 1.})
+                                                       self.net.keep_prob: 0.})
         
         logging.info("Verification error= {:.1f}%, loss= {:.4f}".format(error_rate(prediction,
                                                                           util.crop_to_shape(batch_y,
@@ -472,7 +472,7 @@ class Trainer(object):
                                                             self.net.predicter], 
                                                            feed_dict={self.net.x: batch_x,
                                                                       self.net.y: batch_y,
-                                                                      self.net.keep_prob: 1.})
+                                                                      self.net.keep_prob: 0.})
         summary_writer.add_summary(summary_str, step)
         summary_writer.flush()
         logging.info("Iter {:}, Minibatch Loss= {:.4f}, Training Accuracy= {:.4f}, Minibatch error= {:.1f}%".format(step,
