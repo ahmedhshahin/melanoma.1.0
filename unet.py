@@ -238,9 +238,9 @@ class Unet(object):
             raise ValueError("Unknown cost function: "%cost_name)
 
         regularizer = cost_kwargs.pop("regularizer", None)
-        # if regularizer is not None:
-        #     regularizers = sum([tf.nn.l2_loss(variable) for variable in self.variables])
-        #     loss += (regularizer * regularizers)
+        if regularizer is not None:
+            regularizers = sum([tf.nn.l2_loss(variable) for variable in self.variables])
+            loss += (regularizer * regularizers)
             
         return loss
 
@@ -302,9 +302,9 @@ class Trainer(object):
     
     """
     
-    verification_batch_size = 10
+    verification_batch_size = 4
     
-    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="adam", opt_kwargs={}):
+    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="momentum", opt_kwargs={}):
         self.net = net
         self.batch_size = batch_size
         self.norm_grads = norm_grads
@@ -327,7 +327,7 @@ class Trainer(object):
                                                    **self.opt_kwargs).minimize(self.net.cost, 
                                                                                 global_step=global_step)
         elif self.optimizer == "adam":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.01)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.001)
             self.learning_rate_node = tf.Variable(learning_rate)
             
             optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_node, 
@@ -374,7 +374,7 @@ class Trainer(object):
         
         return init
 
-    def train(self, data_provider, output_path, training_iters=10, epochs=100, dropout=0.25, display_step=1, restore=False, write_graph=False, prediction_path = 'prediction'):
+    def train(self, data_provider, output_path, training_iters=10, epochs=100, dropout=0.75, display_step=1, restore=False, write_graph=False, prediction_path = 'prediction'):
         """
         Lauches the training process
         
@@ -444,12 +444,12 @@ class Trainer(object):
     def store_prediction(self, sess, batch_x, batch_y, name):
         prediction = sess.run(self.net.predicter, feed_dict={self.net.x: batch_x, 
                                                              self.net.y: batch_y, 
-                                                             self.net.keep_prob: 0.})
+                                                             self.net.keep_prob: 1.})
         pred_shape = prediction.shape
         
         loss = sess.run(self.net.cost, feed_dict={self.net.x: batch_x, 
                                                        self.net.y: util.crop_to_shape(batch_y, pred_shape), 
-                                                       self.net.keep_prob: 0.})
+                                                       self.net.keep_prob: 1.})
         
         logging.info("Verification error= {:.1f}%, loss= {:.4f}".format(error_rate(prediction,
                                                                           util.crop_to_shape(batch_y,
@@ -472,7 +472,7 @@ class Trainer(object):
                                                             self.net.predicter], 
                                                            feed_dict={self.net.x: batch_x,
                                                                       self.net.y: batch_y,
-                                                                      self.net.keep_prob: 0.})
+                                                                      self.net.keep_prob: 1.})
         summary_writer.add_summary(summary_str, step)
         summary_writer.flush()
         logging.info("Iter {:}, Minibatch Loss= {:.4f}, Training Accuracy= {:.4f}, Minibatch error= {:.1f}%".format(step,
