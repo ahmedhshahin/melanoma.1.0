@@ -49,7 +49,7 @@ def create_conv_net(x, keep_prob, channels, n_class, layers=3, features_root=16,
     :param summaries: Flag if summaries should be created
     """
     
-    logging.info("Layers {layers}, features {features}, filter size {filter_size}x{filter_size}, pool size: {pool_size}x{pool_size}".format(layers=layers,
+    logging.info("NO DROP Layers {layers}, features {features}, filter size {filter_size}x{filter_size}, pool size: {pool_size}x{pool_size}".format(layers=layers,
                                                                                                            features=features_root,
                                                                                                            filter_size=filter_size,
                                                                                                            pool_size=pool_size))
@@ -176,7 +176,7 @@ class Unet(object):
     :param cost_kwargs: (optional) kwargs passed to the cost function. See Unet._get_cost for more options
     """
     
-    def __init__(self, channels=3, n_class=2, cost="cross_entropy", cost_kwargs={}, **kwargs):
+    def __init__(self, channels=3, n_class=2, cost="dice_coefficient", cost_kwargs={}, **kwargs):
         tf.reset_default_graph()
         
         self.n_class = n_class
@@ -290,6 +290,7 @@ class Unet(object):
         saver.restore(sess, model_path)
         logging.info("Model restored from file: %s" % model_path)
 
+
 class Trainer(object):
     """
     Trains a unet instance
@@ -302,7 +303,8 @@ class Trainer(object):
     
     """
     
-    verification_batch_size = 10
+    verification_batch_size = 4
+    loss_arr = []
     
     def __init__(self, net, batch_size=1, norm_grads=False, optimizer="adam", opt_kwargs={}):
         self.net = net
@@ -313,7 +315,7 @@ class Trainer(object):
         
     def _get_optimizer(self, training_iters, global_step):
         if self.optimizer == "momentum":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.1)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.01)
             decay_rate = self.opt_kwargs.pop("decay_rate", 0.95)
             momentum = self.opt_kwargs.pop("momentum", 0.2)
             
@@ -324,14 +326,10 @@ class Trainer(object):
                                                         staircase=True)
             
             optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate_node, momentum=momentum,
-                                                   **self.opt_kwargs).minimize(self.net.cost, 
-                                                                                global_step=global_step)
+                                                   **self.opt_kwargs).minimize(self.net.cost,
+                                                                               global_step=global_step)
         elif self.optimizer == "adam":
-<<<<<<< HEAD
             learning_rate = self.opt_kwargs.pop("learning_rate", 0.1)
-=======
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.001)
->>>>>>> b39f526a3bddec885ededb85168e8d775fccd520
             self.learning_rate_node = tf.Variable(learning_rate)
             
             optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_node, 
@@ -439,6 +437,7 @@ class Trainer(object):
 
                 self.output_epoch_stats(epoch, total_loss, training_iters, lr)
                 self.store_prediction(sess, test_x, test_y, "epoch_%s"%epoch)
+                np.save('loss_array', self.loss_arr)
                     
                 save_path = self.net.save(sess, save_path)
             logging.info("Optimization Finished!")
@@ -459,6 +458,7 @@ class Trainer(object):
                                                                           util.crop_to_shape(batch_y,
                                                                                              prediction.shape)),
                                                                           loss))
+        self.loss_arr.append(loss)
               
         img = util.combine_img_prediction(batch_x, batch_y, prediction)
         util.save_image(img, "%s/%s.jpg"%(self.prediction_path, name))
