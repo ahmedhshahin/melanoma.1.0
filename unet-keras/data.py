@@ -135,7 +135,7 @@ import glob
 
 class dataProcess(object):
 
-	def __init__(self, out_rows, out_cols, data_path = "/my data/train/image", label_path = "my data/train/label", test_path = "my data/test", npy_path = "../npydata", img_type = "jpg"):
+	def __init__(self, out_rows, out_cols, data_path = "/my data/train/image", label_path = "my data/train/label", test_path = "my data/test", npy_path = "my data/npydata", img_type = "jpg"):
 
 		"""
 		
