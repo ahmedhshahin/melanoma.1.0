@@ -24,13 +24,13 @@ class myUnet(object):
 		imgs_test = mydata.load_test_data()
 		return imgs_train, imgs_mask_train, imgs_test
 
-	def dice_coef(y_true, y_pred, smooth=1):
+	def dice_coef(self, y_true, y_pred, smooth=1):
 		y_true_f = K.flatten(y_true)
 		y_pred_f = K.flatten(y_pred)
 		intersection = K.sum(y_true_f * y_pred_f)
 		return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
-	def dice_coef_loss(y_true, y_pred):
+	def dice_coef_loss(self, y_true, y_pred):
 		return -dice_coef(y_true, y_pred)
 
 	def get_unet(self):
@@ -154,7 +154,7 @@ class myUnet(object):
 		model = Model(input = inputs, output = conv10)
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = 'binary_crossentropy', metrics = ['accuracy'])
-		model.compile(optimizer = Adam(lr = 1e-4), loss = dice_coef_loss, metrics = [dice_coef])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = self.dice_coef_loss, metrics = [self.dice_coef])
 
 		return model
 
