@@ -176,7 +176,7 @@ class Unet(object):
     :param cost_kwargs: (optional) kwargs passed to the cost function. See Unet._get_cost for more options
     """
     
-    def __init__(self, channels=3, n_class=2, cost="dice_coefficient", cost_kwargs={}, **kwargs):
+    def __init__(self, channels=3, n_class=2, cost="cross_entropy", cost_kwargs={}, **kwargs):
         tf.reset_default_graph()
         
         self.n_class = n_class
@@ -238,9 +238,9 @@ class Unet(object):
             raise ValueError("Unknown cost function: "%cost_name)
 
         regularizer = cost_kwargs.pop("regularizer", None)
-        # if regularizer is not None:
-        #     regularizers = sum([tf.nn.l2_loss(variable) for variable in self.variables])
-        #     loss += (regularizer * regularizers)
+        if regularizer is not None:
+            regularizers = sum([tf.nn.l2_loss(variable) for variable in self.variables])
+            loss += (regularizer * regularizers)
             
         return loss
 
@@ -262,7 +262,7 @@ class Unet(object):
             self.restore(sess, model_path)
             
             y_dummy = np.empty((x_test.shape[0], x_test.shape[1], x_test.shape[2], self.n_class))
-            prediction = sess.run(self.predicter, feed_dict={self.x: x_test, self.y: y_dummy, self.keep_prob: 1.})
+            prediction = sess.run(self.predicter, feed_dict={self.x: x_test, self.y: y_dummy, self.keep_prob: 0.})
             
         return prediction
     
@@ -304,7 +304,7 @@ class Trainer(object):
     
     verification_batch_size = 4
     
-    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="momentum", opt_kwargs={}):
+    def __init__(self, net, batch_size=1, norm_grads=False, optimizer="adam", opt_kwargs={}):
         self.net = net
         self.batch_size = batch_size
         self.norm_grads = norm_grads
@@ -327,7 +327,7 @@ class Trainer(object):
                                                    **self.opt_kwargs).minimize(self.net.cost, 
                                                                                 global_step=global_step)
         elif self.optimizer == "adam":
-            learning_rate = self.opt_kwargs.pop("learning_rate", 0.1)
+            learning_rate = self.opt_kwargs.pop("learning_rate", 0.001)
             self.learning_rate_node = tf.Variable(learning_rate)
             
             optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_node, 
