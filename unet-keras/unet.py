@@ -168,7 +168,7 @@ class myUnet(object):
 	def save_img(self):
 
 		print("array to image")
-		imgs = np.load('imgs_mask_test.npy')
+		imgs = np.load('/content/unet-keras/results/imgs_mask_test.npy')
 		for i in range(imgs.shape[0]):
 			img = imgs[i]
 			img = array_to_img(img)
