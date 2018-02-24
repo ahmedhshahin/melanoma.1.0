@@ -183,7 +183,10 @@ class dataProcess(object):
 		print('-'*30)
 		print('Creating test images...')
 		print('-'*30)
-		imgs = glob.glob(self.test_path+"/*."+self.img_type)
+		imgs = sorted(glob.glob(self.test_path+"/*."+self.img_type))
+		names = ['']*len(imgs)
+		for i in range(len(imgs)):
+			names[i] = imgs[i][42:49]
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:

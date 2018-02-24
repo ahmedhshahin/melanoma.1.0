@@ -144,9 +144,19 @@ class myUnet(object):
 
 		model = Model(input = inputs, output = conv10)
 
-		model.compile(optimizer = Adam(lr = 1e-4), loss = 'binary_crossentropy', metrics = ['accuracy'])
+		# model.compile(optimizer = Adam(lr = 1e-4), loss = 'binary_crossentropy', metrics = ['accuracy'])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = 'dice_coef_loss', metrics = ['dice_coef'])
 
 		return model
+
+	def dice_coef(y_true, y_pred, smooth=1):
+		y_true_f = K.flatten(y_true)
+		y_pred_f = K.flatten(y_pred)
+		intersection = K.sum(y_true_f * y_pred_f)
+		return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+
+	def dice_coef_loss(y_true, y_pred):
+		return -dice_coef(y_true, y_pred)
 
 
 	def train(self):
@@ -172,7 +182,7 @@ class myUnet(object):
 		for i in range(imgs.shape[0]):
 			img = imgs[i]
 			img = array_to_img(img)
-			img.save("/content/unet-keras/results/%d.jpg"%(i))
+			img.save("/content/unet-keras/results/{0}.jpg".format(names[i]))
 
 
 
