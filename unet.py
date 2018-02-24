@@ -176,7 +176,7 @@ class Unet(object):
     :param cost_kwargs: (optional) kwargs passed to the cost function. See Unet._get_cost for more options
     """
     
-    def __init__(self, channels=3, n_class=2, cost="cross_entropy", cost_kwargs={}, **kwargs):
+    def __init__(self, channels=3, n_class=2, cost="dice_coefficient", cost_kwargs={}, **kwargs):
         tf.reset_default_graph()
         
         self.n_class = n_class
@@ -238,9 +238,9 @@ class Unet(object):
             raise ValueError("Unknown cost function: "%cost_name)
 
         regularizer = cost_kwargs.pop("regularizer", None)
-        if regularizer is not None:
-            regularizers = sum([tf.nn.l2_loss(variable) for variable in self.variables])
-            loss += (regularizer * regularizers)
+        # if regularizer is not None:
+        #     regularizers = sum([tf.nn.l2_loss(variable) for variable in self.variables])
+        #     loss += (regularizer * regularizers)
             
         return loss
 
