@@ -31,7 +31,7 @@ class myUnet(object):
 		return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
 	def dice_coef_loss(self, y_true, y_pred):
-		return -dice_coef(y_true, y_pred)
+		return -self.dice_coef(y_true, y_pred)
 
 	def get_unet(self):
 
