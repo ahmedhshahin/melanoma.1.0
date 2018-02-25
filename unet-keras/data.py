@@ -135,7 +135,7 @@ import glob
 
 class dataProcess(object):
 
-	def __init__(self, out_rows, out_cols, data_path = "/content/unet-keras/my data/train/image", label_path = "/content/unet-keras/my data/train/label", test_path = "/content/unet-keras/my data/test/image", npy_path = "/content/unet-keras/npydata", img_type = "jpg"):
+	def __init__(self, out_rows, out_cols, data_path = "/content/unet-keras/data_test/train/image", label_path = "/content/unet-keras/data_test/train/label", test_path = "/content/unet-keras/data_test/test/image", npy_path = "/content/unet-keras/npydata", img_type = "jpg"):
 
 		"""
 		
