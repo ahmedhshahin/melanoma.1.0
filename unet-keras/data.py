@@ -198,7 +198,7 @@ class dataProcess(object):
 			imgdatas[i] = img
 			i += 1
 		print('loading done')
-		np.save(self.npy_path + '/names.npy', names)
+		np.save('/content/unet-keras/results/names.npy', names)
 		np.save(self.npy_path + '/imgs_test.npy', imgdatas)
 		print('Saving to imgs_test.npy files done.')
 
