@@ -186,7 +186,7 @@ class dataProcess(object):
 		imgs = sorted(glob.glob(self.test_path+"/*."+self.img_type))
 		names = ['']*len(imgs)
 		for name_id in range(len(imgs)):
-			names[i] = imgs[name_id][42:49]
+			names[name_id] = imgs[name_id][39:46]
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:

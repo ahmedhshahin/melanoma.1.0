@@ -149,7 +149,7 @@ class myUnet(object):
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge9)
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
-		conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
+		conv10 = Conv2D(1, 1, activation = 'relu')(conv9)
 
 		model = Model(input = inputs, output = conv10)
 
@@ -169,7 +169,7 @@ class myUnet(object):
 
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
-		model.fit(imgs_train, imgs_mask_train, batch_size=4, nb_epoch=30, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		model.fit(imgs_train, imgs_mask_train, batch_size=4, nb_epoch=2, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
 
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
