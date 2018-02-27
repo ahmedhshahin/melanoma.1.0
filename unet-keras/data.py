@@ -135,7 +135,7 @@ import glob
 
 class dataProcess(object):
 
-	def __init__(self, out_rows, out_cols, data_path = "/content/unet-keras/data_test/train/image", label_path = "/content/unet-keras/data_test/train/label", test_path = "/content/unet-keras/data_test/test/image", npy_path = "/content/unet-keras/npydata", img_type = "jpg"):
+	def __init__(self, out_rows, out_cols, data_path = "/content/unet-keras/my data/train/image", label_path = "/content/unet-keras/my data/train/label", test_path = "/content/unet-keras/my data/test/image", npy_path = "/content/unet-keras/npydata", img_type = "jpg"):
 
 		"""
 		
@@ -157,7 +157,7 @@ class dataProcess(object):
 		imgs = glob.glob(self.data_path+"/*."+self.img_type)
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,3), dtype=np.uint8)
-		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,3), dtype=np.uint8)
+		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
 			# img = load_img(self.data_path + "/" + midname,grayscale = True)
