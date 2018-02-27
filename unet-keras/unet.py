@@ -35,7 +35,7 @@ class myUnet(object):
 
 	def get_unet(self):
 
-		inputs = Input((self.img_rows, self.img_cols,1))
+		inputs = Input((self.img_rows, self.img_cols,3))
 		
 		'''
 		unet with crop(because padding = valid) 

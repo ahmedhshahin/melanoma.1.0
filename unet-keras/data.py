@@ -160,8 +160,10 @@ class dataProcess(object):
 		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
-			img = load_img(self.data_path + "/" + midname,grayscale = True)
-			label = load_img(self.label_path + "/" + midname.replace(".jpg", "_ground.png"),grayscale = True)
+			# img = load_img(self.data_path + "/" + midname,grayscale = True)
+			img = load_img(self.data_path + "/" + midname)
+			# label = load_img(self.label_path + "/" + midname.replace(".jpg", "_ground.png"),grayscale = True)
+			label = load_img(self.label_path + "/" + midname.replace(".jpg", "_ground.png"))
 			img = img_to_array(img)
 			label = img_to_array(label)
 			#img = cv2.imread(self.data_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
@@ -191,7 +193,7 @@ class dataProcess(object):
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
-			img = load_img(self.test_path + "/" + midname,grayscale = True)
+			img = load_img(self.test_path + "/" + midname)
 			img = img_to_array(img)
 			#img = cv2.imread(self.test_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#img = np.array([img])
