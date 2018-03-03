@@ -156,12 +156,12 @@ class dataProcess(object):
 		print('-'*30)
 		imgs = glob.glob(self.data_path+"/*."+self.img_type)
 		print(len(imgs))
-		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,3), dtype=np.uint8)
+		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
-			# img = load_img(self.data_path + "/" + midname,grayscale = True)
-			img = load_img(self.data_path + "/" + midname)
+			img = load_img(self.data_path + "/" + midname,grayscale = True)
+			# img = load_img(self.data_path + "/" + midname)
 			label = load_img(self.label_path + "/" + midname.replace(".jpg", "_ground.png"),grayscale = True)
 			# label = load_img(self.label_path + "/" + midname.replace(".jpg", "_ground.png"))
 			img = img_to_array(img)
