@@ -162,7 +162,7 @@ class dataProcess(object):
 			midname = imgname[imgname.rindex("/")+1:]
 			img = load_img(self.data_path + "/" + midname,grayscale = True)
 			# img = load_img(self.data_path + "/" + midname)
-			label = load_img(self.label_path + "/" + midname.replace(".jpg", "_ground.png"),grayscale = True)
+			label = load_img(self.label_path + "/" + midname.replace("_padding.jpg", "_mask.png"),grayscale = True)
 			# label = load_img(self.label_path + "/" + midname.replace(".jpg", "_ground.png"))
 			img = img_to_array(img)
 			label = img_to_array(label)
