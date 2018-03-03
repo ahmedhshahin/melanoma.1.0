@@ -190,10 +190,10 @@ class dataProcess(object):
 		for name_id in range(len(imgs)):
 			names[name_id] = imgs[name_id][39:46]
 		print(len(imgs))
-		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,3), dtype=np.uint8)
+		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
-			img = load_img(self.test_path + "/" + midname)
+			img = load_img(self.test_path + "/" + midname, grayscale = True)
 			img = img_to_array(img)
 			#img = cv2.imread(self.test_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#img = np.array([img])
