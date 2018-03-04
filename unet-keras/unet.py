@@ -18,20 +18,9 @@ class myUnet(object):
 	def load_data(self):
 
 		mydata = dataProcess(self.img_rows, self.img_cols)
-		mydata.create_train_data()
-		mydata.create_test_data()
 		imgs_train, imgs_mask_train = mydata.load_train_data()
 		imgs_test = mydata.load_test_data()
 		return imgs_train, imgs_mask_train, imgs_test
-
-	def dice_coef(self, y_true, y_pred, smooth=1):
-		y_true_f = K.flatten(y_true)
-		y_pred_f = K.flatten(y_pred)
-		intersection = K.sum(y_true_f * y_pred_f)
-		return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
-
-	def dice_coef_loss(self, y_true, y_pred):
-		return -self.dice_coef(y_true, y_pred)
 
 	def get_unet(self):
 
@@ -100,25 +89,25 @@ class myUnet(object):
 		'''
 
 		conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
-		print("conv1 shape:",conv1.shape)
+		print "conv1 shape:",conv1.shape
 		conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
-		print("conv1 shape:",conv1.shape)
+		print "conv1 shape:",conv1.shape
 		pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
-		print("pool1 shape:",pool1.shape)
+		print "pool1 shape:",pool1.shape
 
 		conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool1)
-		print("conv2 shape:",conv2.shape)
+		print "conv2 shape:",conv2.shape
 		conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv2)
-		print("conv2 shape:",conv2.shape)
+		print "conv2 shape:",conv2.shape
 		pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
-		print("pool2 shape:",pool2.shape)
+		print "pool2 shape:",pool2.shape
 
 		conv3 = Conv2D(256, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool2)
-		print("conv3 shape:",conv3.shape)
+		print "conv3 shape:",conv3.shape
 		conv3 = Conv2D(256, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv3)
-		print("conv3 shape:",conv3.shape)
+		print "conv3 shape:",conv3.shape
 		pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)
-		print("pool3 shape:",pool3.shape)
+		print "pool3 shape:",pool3.shape
 
 		conv4 = Conv2D(512, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool3)
 		conv4 = Conv2D(512, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv4)
@@ -149,12 +138,11 @@ class myUnet(object):
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge9)
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
-		conv10 = Conv2D(1, 1, activation = 'relu')(conv9)
+		conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 
 		model = Model(input = inputs, output = conv10)
 
-		model.compile(optimizer = Adam(lr = 1e-3), loss = 'binary_crossentropy', metrics = ['accuracy'])
-		# model.compile(optimizer = Adam(lr = 1e-4), loss = self.dice_coef_loss, metrics = [self.dice_coef])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = 'binary_crossentropy', metrics = ['accuracy'])
 
 		return model
 
@@ -169,7 +157,7 @@ class myUnet(object):
 
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
-		model.fit(imgs_train, imgs_mask_train, batch_size=4, nb_epoch=500, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		model.fit(imgs_train, imgs_mask_train, batch_size=4, nb_epoch=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
 
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
@@ -179,11 +167,12 @@ class myUnet(object):
 
 		print("array to image")
 		imgs = np.load('/content/unet-keras/results/imgs_mask_test.npy')
-		names = np.load('/content/unet-keras/results/names.npy')
+		names = np.load()
 		for i in range(imgs.shape[0]):
 			img = imgs[i]
 			img = array_to_img(img)
-			img.save("/content/unet-keras/results/{0}.jpg".format(names[i]))
+			n = names[i]
+			img.save("/content/unet-keras/results/%d.jpg"%n)
 
 
 
