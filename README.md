@@ -26,6 +26,7 @@ We are investigating different deep neural network architectures to achieve the 
   - Dtermining the most informative layer of the RGB layers, in order to decide whether it is better to train with the 3 layers, one of them, or the grayscale images.
 
 * We are testing our dataset on some deep learning models to get some intuitions about the performance of the various archetictures on our data, that will help us to propose our algorithm.
+  - We have tested u-net, seg-net, and refine-net.
 
 ## Technologies Used:
   - Tesnorflow
