@@ -28,14 +28,13 @@ We are investigating different deep neural network architectures to achieve the 
 * We are testing our dataset on some deep learning models to get some intuitions about the performance of the various archetictures on our data, that will help us to propose our algorithm.
 
 ## Technologies Used:
-  - Python
+  - Tesnorflow
+  - Keras
   - Numpy
   - Scipy
   - Matplotlib
   - Sickit-learn
   - Sickit-image
-  - Tensorflow
-  - Keras
   
   
 ## Future Work:
