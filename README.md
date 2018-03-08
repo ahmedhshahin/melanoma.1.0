@@ -27,6 +27,8 @@ We are investigating different deep neural network architectures to achieve the 
 
 * We are testing our dataset on some deep learning models to get some intuitions about the performance of the various archetictures on our data, that will help us to propose our algorithm.
   - We have tested u-net, seg-net, and refine-net.
+  
+* We are looking for a way to combine the low-level features from the spatial resolution with the high level features from the convoloutional path. Hopefully this will yield a better performance on our problem.
 
 ## Technologies Used:
   - Tesnorflow
