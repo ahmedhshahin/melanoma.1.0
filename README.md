@@ -28,5 +28,5 @@ We are investigating different deep neural network architectures to achieve the 
   
   
 # Future Work:
-  - Using the metadata of patients, we want to classify each melanoma image into benign or malignant.
+  - Using the metadata of patients, we want to classify each melanoma image into melanoma, nevus or seborrheic keratosis.
   - We aim to combine both imaging modalities; CLM and OCT; and use both information for a detailed and comprehensive analysis. That includes developing a pretreatment automatic segmentation of the melanoma volumetric information to facilitate and standardize the treatment delivery planning. Automation and standardizing the planning step will reduce the manual induced error. Considering information coming from different imaging modalities highlights the expected added value of deep neural networks in fusing medical image based information.
