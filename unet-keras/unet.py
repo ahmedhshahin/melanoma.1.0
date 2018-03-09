@@ -23,6 +23,9 @@ class myUnet(object):
 		print(np.unique(y_true))
 		return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
+	def test_loss(selfself, y_true, y_pred):
+		return - self.test(y_true, y_pred)
+
 	def load_data(self):
 
 		mydata = dataProcess(self.img_rows, self.img_cols)
