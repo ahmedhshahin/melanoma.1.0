@@ -15,6 +15,14 @@ class myUnet(object):
 		self.img_rows = img_rows
 		self.img_cols = img_cols
 
+	def test(self, y_true, y_pred, smooth=1):
+		# y_true_f = K.flatten(y_true)
+		# y_pred_f = K.flatten(y_pred)
+		# intersection = K.sum(y_true_f * y_pred_f)
+		print(y_pred.shape)
+		print(y_true.shape)
+		# return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+		return 1
 	def load_data(self):
 
 		mydata = dataProcess(self.img_rows, self.img_cols)
@@ -147,7 +155,7 @@ class myUnet(object):
 
 		model = Model(input = inputs, output = conv10)
 
-		model.compile(optimizer = Adam(lr = 1e-4), loss = 'binary_crossentropy', metrics = ['accuracy'])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = self.test, metrics = ['accuracy'])
 
 		return model
 
@@ -162,7 +170,7 @@ class myUnet(object):
 
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
-		model.fit(imgs_train, imgs_mask_train, batch_size=4, nb_epoch=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		model.fit(imgs_train, imgs_mask_train, batch_size=4, nb_epoch=1, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
 
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
