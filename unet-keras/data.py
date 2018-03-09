@@ -14,8 +14,10 @@ class myAugmentation(object):
 	Finally, seperate augmentated image apart into train image and label
 	"""
 
-	def __init__(self, train_path="/content/unet-keras/my data/train/image", label_path="/content/unet-keras/my data/train/label", merge_path="merge", aug_merge_path="aug_merge", aug_train_path="aug_train", aug_label_path="aug_label", img_type="tif"):
-		
+	def __init__(self, out_rows, out_cols, data_path="/content/melanoma.1.0/hassan_data/train/image",
+				 label_path="/content/melanoma.1.0/hassan_data/train/label",
+				 test_path="/content/melanoma.1.0/hassan_data/test", npy_path="/content/unet-keras/npydata",
+				 img_type="jpg"):
 		"""
 		Using glob to get all .img_type form path
 		"""
