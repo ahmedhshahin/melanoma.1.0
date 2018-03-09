@@ -23,7 +23,7 @@ class myUnet(object):
 		print(np.unique(y_true))
 		return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
-	def test_loss(selfself, y_true, y_pred):
+	def test_loss(self, y_true, y_pred):
 		return - self.test(y_true, y_pred)
 
 	def load_data(self):
@@ -159,7 +159,7 @@ class myUnet(object):
 		model = Model(input = inputs, output = conv10)
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
-		model.compile(optimizer = Adam(lr = 1e-4), loss = -self.test, metrics = self.test)
+		model.compile(optimizer = Adam(lr = 1e-4), loss = -self.test_loss, metrics = self.test)
 
 		return model
 
