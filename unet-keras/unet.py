@@ -15,18 +15,18 @@ class myUnet(object):
 		self.img_rows = img_rows
 		self.img_cols = img_cols
 
-	def test(self, y_true, y_pred, smooth=1):
-		y_true_f = K.flatten(y_true)
-		y_pred_f = K.flatten(y_pred)
-		y_pred_f[y_pred_f >= 0.5] = 1
-		y_pred_f[y_pred_f < 0.5] = 0
-		intersection = K.sum(y_true_f * y_pred_f)
-		# print(np.unique(y_pred))
-		# print(np.unique(y_true))
-		return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+	# def test(self, y_true, y_pred, smooth=1):
+	# 	y_true_f = K.flatten(y_true)
+	# 	y_pred_f = K.flatten(y_pred)
+	# 	# y_pred_f[y_pred_f >= 0.5] = 1
+	# 	# y_pred_f[y_pred_f < 0.5] = 0
+	# 	intersection = K.sum(y_true_f * y_pred_f)
+	# 	# print(np.unique(y_pred))
+	# 	# print(np.unique(y_true))
+	# 	return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
-	def test_loss(self, y_true, y_pred):
-		return - self.test(y_true, y_pred)
+	# def test_loss(self, y_true, y_pred):
+	# 	return - self.test(y_true, y_pred)
 
 	def load_data(self):
 
@@ -161,7 +161,7 @@ class myUnet(object):
 		model = Model(input = inputs, output = conv10)
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
-		model.compile(optimizer = Adam(lr = 1e-4), loss = [self.test_loss], metrics = [self.test])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = ['dice'], metrics = ['acc'])
 
 		return model
 
