@@ -17,7 +17,9 @@ class myUnet(object):
 
 	def test(self, y_true, y_pred, smooth=1):
 		y_true_f = K.flatten(y_true)
-		y_pred_f = K.flatten(y_pred) > 0.5
+		y_pred_f = K.flatten(y_pred)
+		y_pred_f[y_pred_f >= 0.5] = 1
+		y_pred_f[y_pred_f < 0.5] = 0
 		intersection = K.sum(y_true_f * y_pred_f)
 		# print(np.unique(y_pred))
 		# print(np.unique(y_true))
