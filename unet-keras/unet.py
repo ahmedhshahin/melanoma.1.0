@@ -16,13 +16,13 @@ class myUnet(object):
 		self.img_cols = img_cols
 
 	def test(self, y_true, y_pred, smooth=1):
-		# y_true_f = K.flatten(y_true)
-		# y_pred_f = K.flatten(y_pred)
-		# intersection = K.sum(y_true_f * y_pred_f)
-		print(y_pred)
-		print(y_true)
-		# return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
-		return 1
+		y_true_f = K.flatten(y_true)
+		y_pred_f = K.flatten(y_pred)
+		intersection = K.sum(y_true_f * y_pred_f)
+		print(np.unique(y_pred))
+		print(np.unique(y_true))
+		return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+
 	def load_data(self):
 
 		mydata = dataProcess(self.img_rows, self.img_cols)
