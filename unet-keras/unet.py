@@ -161,7 +161,7 @@ class myUnet(object):
 		model = Model(input = inputs, output = conv10)
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
-		model.compile(optimizer = Adam(lr = 1e-4), loss = ['dice'], metrics = ['acc'])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = ['dice'], metrics = ['dice_acc'])
 
 		return model
 
@@ -176,7 +176,7 @@ class myUnet(object):
 
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
-		model.fit(imgs_train, imgs_mask_train, batch_size=4, nb_epoch=1, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		model.fit(imgs_train, imgs_mask_train, batch_size=4, nb_epoch=50, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
 
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
@@ -191,7 +191,7 @@ class myUnet(object):
 			img = imgs[i]
 			img = array_to_img(img)
 			n = names[i]
-			img.save("/content/unet-keras/results/%d.jpg"%n)
+			img.save("/content/unet-keras/results/{0}.jpg".format(n))
 
 
 
