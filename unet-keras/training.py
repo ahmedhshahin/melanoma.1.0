@@ -897,6 +897,9 @@ class Model(Container):
                                     suffix = 'acc'
                             elif metric in ('crossentropy', 'ce'):
                                     suffix = 'ce'
+                            elif metric in ('dice_acc'):
+                                    suffix = 'd'
+
                             weighted_metric_fn = _weighted_masked_objective(metric_fn)
                             metric_name = metric_name_prefix + suffix
                         else:
