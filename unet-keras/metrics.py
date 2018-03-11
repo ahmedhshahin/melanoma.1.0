@@ -21,6 +21,7 @@ from .losses import poisson
 from .losses import cosine_proximity
 from .losses import dice
 from .losses import dice_acc
+from .losses import calc_jaccard
 from .utils.generic_utils import deserialize_keras_object
 from .utils.generic_utils import serialize_keras_object
 
