@@ -22,7 +22,7 @@ def dice_acc(y_true, y_pred, smooth=1):
 def calc_jaccard(y_true, y_pred, smooth=1):
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
-    num = K.sum(y_true_f, y_pred_f)
+    num = K.sum(y_true_f * y_pred_f)
     den = K.sum(y_true_f) + K.sum(y_pred_f) - num
     return (num + smooth) / (den + smooth)
 
