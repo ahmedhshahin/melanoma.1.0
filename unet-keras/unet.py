@@ -166,6 +166,9 @@ class myUnet(object):
 			intersection = K.sum(y_true_f * y_pred_f)
 			return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
+		def dice_coef_loss(y_true, y_pred):
+			return 1-dice_coef(y_true, y_pred)
+
 		def Jac(y_true, y_pred):
 			y_pred_f = K.flatten(K.round(y_pred))
 			y_true_f = K.flatten(y_true)
@@ -174,7 +177,7 @@ class myUnet(object):
 			return num / den
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
-		model.compile(optimizer = Adam(lr = 1e-3), loss = ['binary_crossentropy'], metrics = [dice_coef])
+		model.compile(optimizer = Adam(lr = 1e-3), loss = [dice_coef_loss], metrics = [dice_coef])
 
 		return model
 
