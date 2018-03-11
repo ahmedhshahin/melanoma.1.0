@@ -24,7 +24,7 @@ def calc_jaccard(y_true, y_pred, smooth=1):
     y_pred_f = K.round(K.flatten(y_pred))
     num = K.sum(y_true_f * y_pred_f)
     den = K.sum(y_true_f) + K.sum(y_pred_f) - num
-    return (num + smooth) / (den + smooth)
+    return (num) / (den)
 
 def mean_squared_error(y_true, y_pred):
     return K.mean(K.square(y_pred - y_true), axis=-1)
