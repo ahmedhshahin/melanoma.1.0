@@ -26,6 +26,12 @@ from .utils.generic_utils import deserialize_keras_object
 from .utils.generic_utils import serialize_keras_object
 
 
+def calc_jaccard(y_true, y_pred, smooth=1):
+    y_pred_f = K.round(y_pred)
+    num = K.sum(y_true * y_pred_f)
+    den = K.sum(y_true) + K.sum(y_pred_f) - num
+    return (num) / (den)
+
 def binary_accuracy(y_true, y_pred):
     return K.mean(K.equal(y_true, K.round(y_pred)), axis=-1)
 

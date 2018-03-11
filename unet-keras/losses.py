@@ -19,13 +19,6 @@ def dice(y_true, y_pred, smooth=1):
 def dice_acc(y_true, y_pred, smooth=1):
     return - dice(y_true, y_pred)
 
-def calc_jaccard(y_true, y_pred, smooth=1):
-    y_true_f = K.flatten(y_true)
-    y_pred_f = K.round(K.flatten(y_pred))
-    num = K.sum(y_true_f * y_pred_f)
-    den = K.sum(y_true_f) + K.sum(y_pred_f) - num
-    return (num) / (den)
-
 def mean_squared_error(y_true, y_pred):
     return K.mean(K.square(y_pred - y_true), axis=-1)
 
