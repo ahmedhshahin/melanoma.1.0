@@ -167,7 +167,7 @@ class myUnet(object):
 			return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
 		def dice_coef_loss(y_true, y_pred):
-			return 1-dice_coef(y_true, y_pred)
+			return -dice_coef(y_true, y_pred)
 
 		def Jac(y_true, y_pred):
 			y_pred_f = K.flatten(K.round(y_pred))
