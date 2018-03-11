@@ -160,15 +160,21 @@ class myUnet(object):
 
 		model = Model(input = inputs, output = conv10)
 
+		def dice_coef(y_true, y_pred, smooth=1):
+			y_true_f = K.flatten(y_true)
+			y_pred_f = K.flatten(y_pred)
+			intersection = K.sum(y_true_f * y_pred_f)
+			return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+
 		def Jac(y_true, y_pred):
 			y_pred_f = K.flatten(K.round(y_pred))
 			y_true_f = K.flatten(y_true)
 			num = K.sum(y_true_f * y_pred_f)
 			den = K.sum(y_true_f) + K.sum(y_pred_f) - num
-			return num, den
+			return num / den
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
-		model.compile(optimizer = Adam(lr = 1e-3), loss = ['binary_crossentropy'], metrics = [Jac])
+		model.compile(optimizer = Adam(lr = 1e-3), loss = ['binary_crossentropy'], metrics = [dice_coef])
 
 		return model
 
