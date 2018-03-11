@@ -868,7 +868,7 @@ class Model(Container):
                     metric_name_prefix = 'weighted_' if weights is not None else ''
 
                     for metric in metrics:
-                        if metric in ('accuracy', 'acc', 'crossentropy', 'ce', 'dice_acc'):
+                        if metric in ('accuracy', 'acc', 'crossentropy', 'ce', 'dice_acc', 'calc_jaccard'):
                             # custom handling of accuracy/crossentropy
                             # (because of class mode duality)
                             output_shape = self._internal_output_shapes[i]
@@ -881,6 +881,8 @@ class Model(Container):
                                     metric_fn = metrics_module.binary_crossentropy
                                 elif metric in ('dice_acc'):
                                     metric_fn = metrics_module.dice_acc
+                                elif metric in ('calc_jaccard'):
+                                    metric_fn = metrics_module.calc_jaccard
                             elif self.loss_functions[i] == losses.sparse_categorical_crossentropy:
                                 # case: categorical accuracy/crossentropy with sparse targets
                                 if metric in ('accuracy', 'acc'):
@@ -899,6 +901,8 @@ class Model(Container):
                                     suffix = 'ce'
                             elif metric in ('dice_acc'):
                                     suffix = 'd'
+                            elif metric in ('calc_jaccard'):
+                                    suffix = 'JACCARD'
 
                             weighted_metric_fn = _weighted_masked_objective(metric_fn)
                             metric_name = metric_name_prefix + suffix
