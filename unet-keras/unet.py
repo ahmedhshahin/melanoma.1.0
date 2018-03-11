@@ -177,7 +177,7 @@ class myUnet(object):
 			return num / den
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
-		model.compile(optimizer = Adam(lr = 5e-3), loss = dice_coef_loss, metrics = [Jac])
+		model.compile(optimizer = Adam(lr = 8e-3), loss = dice_coef_loss, metrics = [Jac])
 
 		return model
 
