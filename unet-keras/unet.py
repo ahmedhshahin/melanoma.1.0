@@ -165,7 +165,7 @@ class myUnet(object):
 			y_true_f = K.flatten(y_true)
 			num = K.sum(y_true_f * y_pred_f)
 			den = K.sum(y_true_f) + K.sum(y_pred_f) - num
-			return K.mean(y_true)
+			return K.constant(5)
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
 		model.compile(optimizer = Adam(lr = 1e-3), loss = ['binary_crossentropy'], metrics = [Jac])
