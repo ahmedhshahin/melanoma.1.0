@@ -2,6 +2,17 @@
 ## Introduction:
 Cancer of the skin is by far the most common of all cancers. Melanoma accounts for only about 1% of skin cancers but causes a large majority of skin cancer deaths. One person dies of skin melanoma every hour (every 54 minutes). Early detection of skin cancer melanoma is a key for the treatment success. Automatic image-based naevus detection, identification, and classification is mandatory to advance home-based skin melanoma early detection. Also, making this technology affordable using the smartphone camera will have an impact on the early detection. Once, patient has a positive result for melanoma detection test from the mobile application, he should be admitted to a more detailed and hospital-based melanoma confirmation and grading test. This is done using other imaging and biophysical methods noninvasively e.g. Confocal Laser Microscopy (CLM) and Optical coherence tomography (OCT). Both are used to assess the subdermal melanoma geometric information to plan the therapy noninvasively.
 
+
+Here is a sample of the images and its ground truth:
+
+
+![alt text](https://raw.githubusercontent.com/ahmedshahin9/melanoma.1.0/master/dataset/train/image/0000000_17_padding.jpg)
+![alt text](https://raw.githubusercontent.com/ahmedshahin9/melanoma.1.0/master/dataset/train/image/0003056_17_padding.jpg)
+![alt text](https://raw.githubusercontent.com/ahmedshahin9/melanoma.1.0/master/dataset/train/image/0010029_17_padding.jpg)
+![alt text](https://raw.githubusercontent.com/ahmedshahin9/melanoma.1.0/master/dataset/train/label/0000000_17_mask.png)
+![alt text](https://raw.githubusercontent.com/ahmedshahin9/melanoma.1.0/master/dataset/train/label/0003056_17_mask.png)
+![alt text](https://raw.githubusercontent.com/ahmedshahin9/melanoma.1.0/master/dataset/train/label/0010029_17_mask.png)
+
 ## Project Description:
 Our plan is to develop an image analysis algorithm that enables the automated detection, identification of Melanoma based on some visual features of the naevus; symmetry, border, color, diameter, and dynamic changes, those features have been incorporated in the automatic algorithm using classical machine learning techniques which did not introduce good results.
   
@@ -15,16 +26,18 @@ We are investigating different deep neural network architectures to achieve the 
   - Dtermining the most informative layer of the RGB layers, in order to decide whether it is better to train with the 3 layers, one of them, or the grayscale images.
 
 * We are testing our dataset on some deep learning models to get some intuitions about the performance of the various archetictures on our data, that will help us to propose our algorithm.
+  - We have tested u-net, seg-net, and refine-net.
+  
+* We are looking for a way to combine the low-level features from the spatial resolution with the high level features from the convoloutional path. Hopefully this will yield a better performance on our problem.
 
 ## Technologies Used:
-  - Python
+  - Tesnorflow
+  - Keras
   - Numpy
   - Scipy
   - Matplotlib
   - Sickit-learn
   - Sickit-image
-  - Tensorflow
-  - Keras
   
   
 ## Future Work:
