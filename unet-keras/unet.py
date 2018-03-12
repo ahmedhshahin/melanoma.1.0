@@ -176,8 +176,8 @@ class myUnet(object):
 			den = K.sum(y_true_f) + K.sum(y_pred_f) - num
 			return num / den
 
-		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
-		model.compile(optimizer = Adam(lr = 1e-2), loss = dice_coef_loss, metrics = [Jac])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
+		# model.compile(optimizer = Adam(lr = 1e-2), loss = dice_coef_loss, metrics = ['acc'])
 
 		return model
 
