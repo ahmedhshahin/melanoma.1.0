@@ -156,7 +156,7 @@ class myUnet(object):
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge9)
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
-		conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
+		conv10 = Conv2D(1, 1, activation = 'linear')(conv9)
 
 		model = Model(input = inputs, output = conv10)
 
@@ -176,7 +176,7 @@ class myUnet(object):
 			den = K.sum(y_true_f) + K.sum(y_pred_f) - num
 			return num / den
 
-		model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['accuracy'])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = ['Jac', 'acc'])
 		# model.compile(optimizer = Adam(lr = 1e-2), loss = dice_coef_loss, metrics = ['acc'])
 
 		return model
