@@ -143,8 +143,14 @@ class myUnet(object):
 		conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 
 		model = Model(input = inputs, output = conv10)
+		def Jac(y_true, y_pred):
+			y_pred_f = K.flatten(K.round(y_pred))
+			y_true_f = K.flatten(y_true)
+			num = K.sum(y_true_f * y_pred_f)
+			den = K.sum(y_true_f) + K.sum(y_pred_f) - num
+			return num / den
 
-		model.compile(optimizer = Adam(lr = 1e-4), loss = 'binary_crossentropy', metrics = ['accuracy'])
+		model.compile(optimizer = Adam(lr = 1e-4), loss = 'binary_crossentropy', metrics = [Jac])
 
 		return model
 
