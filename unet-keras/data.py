@@ -2,6 +2,7 @@ from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_a
 import numpy as np 
 import os
 import glob
+import imageio
 #import cv2
 #from libtiff import TIFF
 
@@ -161,13 +162,13 @@ class dataProcess(object):
 		imgs = glob.glob(self.data_path+"/*."+self.img_type)
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
-		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,1,2), dtype=np.uint8)
+		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,2), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
 			img = load_img(self.data_path + "/" + midname,grayscale = True)
-			label = load_img(self.label_path + "/" + midname.replace("padding.jpg","mask.png"),grayscale = True)
+			label = imageio.imread(self.label_path + "/" + midname.replace("padding.jpg","mask.png"))
 			img = img_to_array(img)
-			label = img_to_array(label)
+			# label = img_to_array(label)
 			#img = cv2.imread(self.data_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#label = cv2.imread(self.label_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#img = np.array([img])
