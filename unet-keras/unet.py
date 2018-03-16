@@ -180,7 +180,7 @@ class myUnet(object):
     			# y_pred is softmax output of shape (num_samples, num_classes)
     			# y_true is one hot encoding of target (shape= (num_samples, num_classes))
 			print("================================================") 
-			print(K.min(y_pred)
+			print(K.min(y_pred))
 			print("================================================")
 			# te
 			intersect = K.sum(y_pred * y_true, 0)
