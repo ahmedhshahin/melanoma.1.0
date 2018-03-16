@@ -179,20 +179,17 @@ class myUnet(object):
 		def soft_dice(y_pred, y_true):
     			# y_pred is softmax output of shape (num_samples, num_classes)
     			# y_true is one hot encoding of target (shape= (num_samples, num_classes))
-			#y_pred = K.reshape(y_pred, (tf.shape(y_pred)[0]*tf.shape(y_pred)[1],2)) 
-			#y_true = K.reshape(y_true, (tf.shape(y_true)[0]*tf.shape(y_true)[1],2))
 			print("================================================") 
-			print(K.min(y_pred))
+			print(K.min(y_pred)
 			print("================================================")
 
 			intersect = K.sum(y_pred * y_true, 0)
 			denominator = K.sum(y_pred, 0) + K.sum(y_true, 0)
 			dice_scores = -2 * intersect / (denominator + (1e-6))
-			#return K.mean(dice_scores[..., 1])
-			return K.min(y_pred)
+			return K.mean(dice_scores[..., 0])
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
-		model.compile(optimizer = Adam(lr = 1e-2), loss = soft_dice, metrics = ['acc'])
+		model.compile(optimizer = Adam(lr = 1e-2), loss = soft_dice, metrics = [Jac, 'acc'])
 
 		return model
 
