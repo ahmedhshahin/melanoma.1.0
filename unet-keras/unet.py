@@ -157,6 +157,7 @@ class myUnet(object):
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
 		conv10 = Conv2D(2, 1, activation = 'sigmoid')(conv9)
+		print("conv10 shape:",conv10.shape)
 
 		model = Model(input = inputs, output = conv10)
 
