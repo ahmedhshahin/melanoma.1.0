@@ -178,14 +178,10 @@ class myUnet(object):
 		def soft_dice(y_pred, y_true):
     			# y_pred is softmax output of shape (num_samples, num_classes)
     			# y_true is one hot encoding of target (shape= (num_samples, num_classes))
-			y_true = K.zeros(shape=(y_true.shape[0]*y_true.shape[1], 2))
-			y_true[:,0] = K.flatten(y_true[..., 0])
-			y_true[:,1] = K.flatten(y_true[..., 1])
-
-			y_pred = K.zeros(shape=(y_pred.shape[0]*y_pred.shape[1], 2))
-			y_pred[:,0] = K.flatten(y_pred[..., 0])
-			y_pred[:,1] = K.flatten(y_pred[..., 1])
+			y_pred = K.reshape(y_pred, (y_pred.shape[0]*y_pred.shape[1]*y_pred.shape[2] , 2) 
+			y_true = K.reshape(y_true, (y_true.shape[0]*y_true.shape[1]*y_true.shape[2] , 2) 
 			
+
 			intersect = K.sum(y_pred * y_true, 0)
 			denominator = K.sum(y_pred, 0) + K.sum(y_true, 0)
 			dice_scores = -2 * intersect / (denominator + (1e-6))
