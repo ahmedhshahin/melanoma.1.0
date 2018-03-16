@@ -181,7 +181,7 @@ class myUnet(object):
 			#y_pred = K.reshape(y_pred, (tf.shape(y_pred)[0]*tf.shape(y_pred)[1],2)) 
 			#y_true = K.reshape(y_true, (tf.shape(y_true)[0]*tf.shape(y_true)[1],2))
 			print("================================================") 
-			print((y_true))
+			print((y_pred))
 			print("================================================")
 
 			intersect = K.sum(y_pred * y_true, 0)
