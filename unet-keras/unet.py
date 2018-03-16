@@ -178,9 +178,11 @@ class myUnet(object):
 		def soft_dice(y_pred, y_true):
     			# y_pred is softmax output of shape (num_samples, num_classes)
     			# y_true is one hot encoding of target (shape= (num_samples, num_classes))
-			y_pred = K.reshape(y_pred, (tf.shape(y_pred)[0]*tf.shape(y_pred)[1],2)) 
-			y_true = K.reshape(y_true, (tf.shape(y_true)[0]*tf.shape(y_true)[1],2)) 
-			
+			#y_pred = K.reshape(y_pred, (tf.shape(y_pred)[0]*tf.shape(y_pred)[1],2)) 
+			#y_true = K.reshape(y_true, (tf.shape(y_true)[0]*tf.shape(y_true)[1],2))
+			print("================================================") 
+			print(tf.shape(y_true))
+			print("================================================")
 
 			intersect = K.sum(y_pred * y_true, 0)
 			denominator = K.sum(y_pred, 0) + K.sum(y_true, 0)
