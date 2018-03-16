@@ -161,7 +161,7 @@ class dataProcess(object):
 		imgs = glob.glob(self.data_path+"/*."+self.img_type)
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
-		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
+		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,2), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
 			img = load_img(self.data_path + "/" + midname,grayscale = True)
@@ -173,7 +173,8 @@ class dataProcess(object):
 			#img = np.array([img])
 			#label = np.array([label])
 			imgdatas[i] = img
-			imglabels[i] = label
+			imglabels[i, ..., 0] = label
+			imglabels[i, ..., 1] = 255 - label
 			if i % 100 == 0:
 				print('Done: {0}/{1} images'.format(i, len(imgs)))
 			i += 1
