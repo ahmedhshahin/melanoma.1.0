@@ -181,7 +181,7 @@ class myUnet(object):
     			intersect = K.sum(y_pred * y_true, 0)
     			denominator = K.sum(y_pred, 0) + K.sum(y_true, 0)
     			dice_scores = -2 * intersect / (denominator + (1e-6))
-    			return dice_scores
+    			return dice_scores[0]
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
 		model.compile(optimizer = Adam(lr = 1e-2), loss = ['categorical_crossentropy'], metrics = ['acc'])
