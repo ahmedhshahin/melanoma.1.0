@@ -182,7 +182,7 @@ class myUnet(object):
 			print("================================================") 
 			print(K.min(y_pred)
 			print("================================================")
-
+			# te
 			intersect = K.sum(y_pred * y_true, 0)
 			denominator = K.sum(y_pred, 0) + K.sum(y_true, 0)
 			dice_scores = -2 * intersect / (denominator + (1e-6))
