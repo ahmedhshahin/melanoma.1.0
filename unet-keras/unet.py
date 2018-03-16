@@ -184,7 +184,7 @@ class myUnet(object):
     			return dice_scores
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
-		model.compile(optimizer = Adam(lr = 1e-2), loss = ['binary_crossentropy'], metrics = ['acc'])
+		model.compile(optimizer = Adam(lr = 1e-2), loss = ['categorical_crossentropy'], metrics = ['acc'])
 
 		return model
 
