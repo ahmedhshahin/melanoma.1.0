@@ -8,7 +8,7 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
 from data import *
 
-class LossHistory(keras.callbacks.Callback):
+class LossHistory(Callback):
     def on_train_begin(self, logs={}):
         self.losses = []
 
