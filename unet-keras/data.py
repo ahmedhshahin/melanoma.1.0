@@ -174,8 +174,8 @@ class dataProcess(object):
 			#img = np.array([img])
 			#label = np.array([label])
 			imgdatas[i] = img
-			imglabels[i, ..., 0] = label
-			imglabels[i, ..., 1] = 255 - label
+			imglabels[i] = label
+			# imglabels[i, ..., 1] = 255 - label
 			if i % 100 == 0:
 				print('Done: {0}/{1} images'.format(i, len(imgs)))
 			i += 1
