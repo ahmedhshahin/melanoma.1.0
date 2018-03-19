@@ -4,7 +4,7 @@ import numpy as np
 from keras.models import *
 from keras.layers import Input, merge, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D
 from keras.optimizers import *
-from keras.callbacks import ModelCheckpoint, LearningRateScheduler
+from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
 from data import *
 
