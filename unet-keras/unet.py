@@ -10,10 +10,10 @@ from data import *
 
 class LossHistory(Callback):
 	def on_epoch_begin(self, logs={}):
-    	self.losses = []
+		self.losses = []
 
 	def on_epoch_end(self, batch, logs={}):
-    	self.losses.append(logs.get('loss'))
+		self.losses.append(logs.get('loss'))
 
 class myUnet(object):
 
