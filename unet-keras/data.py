@@ -168,7 +168,7 @@ class dataProcess(object):
 			img = load_img(self.data_path + "/" + midname,grayscale = True)
 			label = load_img(self.label_path + "/" + midname.replace(".jpg","_ground.png"), grayscale=True)
 			img = img_to_array(img)
-			# label = img_to_array(label)
+			label = img_to_array(label)
 			#img = cv2.imread(self.data_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#label = cv2.imread(self.label_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#img = np.array([img])
