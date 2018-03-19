@@ -17,7 +17,7 @@ class LossHistory(keras.callbacks.Callback):
 
 class myUnet(object):
 
-	def __init__(self, img_rows = 256, img_cols = 256, learning_rate):
+	def __init__(self, learning_rate, img_rows = 256, img_cols = 256):
 
 		self.img_rows = img_rows
 		self.img_cols = img_cols
