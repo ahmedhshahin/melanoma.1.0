@@ -197,7 +197,7 @@ class myUnet(object):
 			return K.mean(dice_scores[..., 0])
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
-		model.compile(optimizer = Adam(lr = lr), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
+		model.compile(optimizer = Adam(lr = self.lr), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
 
 		return model
 
