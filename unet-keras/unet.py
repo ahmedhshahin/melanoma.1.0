@@ -210,7 +210,7 @@ class myUnet(object):
 		model = self.get_unet()
 		print("got unet")
 
-		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='val_loss',verbose=1, save_best_only=True)
+		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
 		history = LossHistory()
 		model.fit(imgs_train, imgs_mask_train, batch_size=16, nb_epoch=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
