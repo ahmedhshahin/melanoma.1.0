@@ -10,10 +10,11 @@ from data import *
 
 class myUnet(object):
 
-	def __init__(self, img_rows = 256, img_cols = 256):
+	def __init__(self, img_rows = 256, img_cols = 256, learning_rate):
 
 		self.img_rows = img_rows
 		self.img_cols = img_cols
+		self.lr = learning_rate
 
 	# def test(self, y_true, y_pred, smooth=1):
 	# 	y_true_f = K.flatten(y_true)
@@ -156,7 +157,7 @@ class myUnet(object):
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge9)
 		conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
-		conv10 = Conv2D(2, 1, activation = 'sigmoid')(conv9)
+		conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 		print("conv10 shape:",conv10.shape)
 
 		model = Model(input = inputs, output = conv10)
@@ -189,7 +190,7 @@ class myUnet(object):
 			return K.mean(dice_scores[..., 0])
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
-		model.compile(optimizer = Adam(lr = 1e-3), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
+		model.compile(optimizer = Adam(lr = lr), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
 
 		return model
 
@@ -204,7 +205,7 @@ class myUnet(object):
 
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='val_loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
-		model.fit(imgs_train, imgs_mask_train, batch_size=16, nb_epoch=500, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		model.fit(imgs_train, imgs_mask_train, batch_size=16, nb_epoch=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
 
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
@@ -225,9 +226,11 @@ class myUnet(object):
 
 
 if __name__ == '__main__':
-	myunet = myUnet()
-	myunet.train()
-	myunet.save_img()
+	lrs = 10 ** np.random.uniform(-6,-2,10)
+	for l in lrs:
+		myunet = myUnet(learning_rate=l)
+		myunet.train()
+	# myunet.save_img()
 
 
 
