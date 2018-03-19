@@ -212,9 +212,11 @@ class myUnet(object):
 
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
-		history = LossHistory()
-		model.fit(imgs_train, imgs_mask_train, batch_size=16, nb_epoch=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
-		np.save("/content/unet-keras/{0}".format(self.lr) ,history.losses)
+		losses = []
+		model.fit(imgs_train, imgs_mask_train, batch_size=16, nb_epoch=2, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		losses.append(logs.get('loss'))
+
+		np.save("/content/unet-keras/{0}".format(self.lr) , losses)
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
 		np.save('/content/unet-keras/results/imgs_mask_test.npy', imgs_mask_test)
