@@ -162,7 +162,7 @@ class dataProcess(object):
 		imgs = glob.glob(self.data_path+"/*."+self.img_type)
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
-		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,2), dtype=np.uint8)
+		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
 			img = load_img(self.data_path + "/" + midname,grayscale = True)
