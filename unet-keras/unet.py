@@ -197,26 +197,38 @@ class myUnet(object):
 			dice_scores = -2 * intersect / (denominator + (1e-6))
 			return K.mean(dice_scores[..., 0])
 
-		# def weighted_crossentropy(y_pred ,y_true):
-		# 	flat_logits = tf.reshape(logits, [-1, self.n_class])
-	 #        flat_labels = tf.reshape(self.y, [-1, self.n_class])
-	 #        if cost_name == "cross_entropy":
-	 #            class_weights = cost_kwargs.pop("class_weights", None)
-	            
-	 #            if class_weights is not None:
-	 #                class_weights = tf.constant(np.array(class_weights, dtype=np.float32))
-	        
-	 #                weight_map = tf.multiply(flat_labels, class_weights)
-	 #                weight_map = tf.reduce_sum(weight_map, axis=1)
-	        
-	 #                loss_map = tf.nn.softmax_cross_entropy_with_logits(logits=flat_logits,
-	 #                                                                   labels=flat_labels)
-	 #                weighted_loss = tf.multiply(loss_map, weight_map)
-	        
-	 #                loss = tf.reduce_mean(weighted_loss)
+		def binary_crossentropy_wt(y_true, y_pred, from_logits=False):
+		    """Binary crossentropy between an output tensor and a target tensor.
+
+		    # Arguments
+		        target: A tensor with the same shape as `output`.
+		        output: A tensor.
+		        from_logits: Whether `output` is expected to be a logits tensor.
+		            By default, we consider that `output`
+		            encodes a probability distribution.
+
+		    # Returns
+		        A tensor.
+		    """
+		    # Note: tf.nn.sigmoid_cross_entropy_with_logits
+		    # expects logits, Keras expects probabilities.
+		    t = class_weight.compute_class_weight('balanced', np.unique(y_true), y_true.flatten())
+		    weight_map = np.zeros(y_true.shape)
+		    if not from_logits:
+		        # transform back to logits
+		        _epsilon = _to_tensor(epsilon(), y_pred.dtype.base_dtype)
+		        y_pred = tf.clip_by_value(y_pred, _epsilon, 1 - _epsilon)
+		        y_pred = tf.log(y_pred / (1 - y_pred))
+		    loss_map = tf.nn.sigmoid_cross_entropy_with_logits(labels=y_true, logits=y_pred)
+		    weight_map[y_true == 0] = t[0]
+		    weight_map[y_true == 1] = t[1]
+		    weighted_loss = tf.multiply(loss_map, weight_map)
+    		return tf.reduce_mean(weighted_loss)
+
+
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
-		model.compile(optimizer = Adam(lr = self.lr), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
+		model.compile(optimizer = Adam(lr = self.lr), loss = binary_crossentropy_wt, metrics = [Jac, 'acc'])
 
 		return model
 
