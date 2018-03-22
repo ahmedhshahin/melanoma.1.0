@@ -197,23 +197,23 @@ class myUnet(object):
 			dice_scores = -2 * intersect / (denominator + (1e-6))
 			return K.mean(dice_scores[..., 0])
 
-		def weighted_crossentropy(y_pred ,y_true):
-			flat_logits = tf.reshape(logits, [-1, self.n_class])
-	        flat_labels = tf.reshape(self.y, [-1, self.n_class])
-	        if cost_name == "cross_entropy":
-	            class_weights = cost_kwargs.pop("class_weights", None)
+		# def weighted_crossentropy(y_pred ,y_true):
+		# 	flat_logits = tf.reshape(logits, [-1, self.n_class])
+	 #        flat_labels = tf.reshape(self.y, [-1, self.n_class])
+	 #        if cost_name == "cross_entropy":
+	 #            class_weights = cost_kwargs.pop("class_weights", None)
 	            
-	            if class_weights is not None:
-	                class_weights = tf.constant(np.array(class_weights, dtype=np.float32))
+	 #            if class_weights is not None:
+	 #                class_weights = tf.constant(np.array(class_weights, dtype=np.float32))
 	        
-	                weight_map = tf.multiply(flat_labels, class_weights)
-	                weight_map = tf.reduce_sum(weight_map, axis=1)
+	 #                weight_map = tf.multiply(flat_labels, class_weights)
+	 #                weight_map = tf.reduce_sum(weight_map, axis=1)
 	        
-	                loss_map = tf.nn.softmax_cross_entropy_with_logits(logits=flat_logits,
-	                                                                   labels=flat_labels)
-	                weighted_loss = tf.multiply(loss_map, weight_map)
+	 #                loss_map = tf.nn.softmax_cross_entropy_with_logits(logits=flat_logits,
+	 #                                                                   labels=flat_labels)
+	 #                weighted_loss = tf.multiply(loss_map, weight_map)
 	        
-	                loss = tf.reduce_mean(weighted_loss)
+	 #                loss = tf.reduce_mean(weighted_loss)
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
 		model.compile(optimizer = Adam(lr = self.lr), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
