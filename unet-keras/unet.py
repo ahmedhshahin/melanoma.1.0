@@ -216,6 +216,7 @@ class myUnet(object):
 		t = class_weight.compute_class_weight('balanced', np.unique(imgs_mask_train), imgs_mask_train.flatten())
 		class_weights = {0: t[0], 1:t[1]}
 		print(class_weights)
+		print(imgs_mask_train.shape)
 		model.fit(imgs_train, imgs_mask_train, batch_size=16, nb_epoch=500, verbose=1,validation_split=0.2, class_weight=class_weights, shuffle=True, callbacks=[model_checkpoint])
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
