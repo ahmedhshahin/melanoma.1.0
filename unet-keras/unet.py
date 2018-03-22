@@ -212,7 +212,7 @@ class myUnet(object):
 		    """
 		    # Note: tf.nn.sigmoid_cross_entropy_with_logits
 		    # expects logits, Keras expects probabilities.
-		    t = class_weight.compute_class_weight('balanced', np.unique(y_true), tf.flatten(y_true))
+		    t = class_weight.compute_class_weight('balanced', np.unique(y_true), tf.contrib.layesrs.flatten(y_true))
 		    weight_map = np.zeros(y_true.shape)
 		    if not from_logits:
 		        # transform back to logits
