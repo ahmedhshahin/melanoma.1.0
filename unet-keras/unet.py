@@ -223,7 +223,7 @@ class myUnet(object):
 		    weight_map[y_true == 0] = t[0]
 		    weight_map[y_true == 1] = t[1]
 		    weighted_loss = tf.multiply(loss_map, weight_map)
-			return tf.reduce_mean(weighted_loss)
+		    return tf.reduce_mean(weighted_loss)
 
 
 
