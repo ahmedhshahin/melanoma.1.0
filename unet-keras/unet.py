@@ -7,6 +7,7 @@ from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
 from data import *
+from sklearn.utils import class_weight
 
 class LossHistory(Callback):
 	def on_train_begin(self, logs={}):
@@ -212,7 +213,10 @@ class myUnet(object):
 
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
-		model.fit(imgs_train, imgs_mask_train, batch_size=16, nb_epoch=500, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		t = class_weight.compute_class_weight('balanced', np.unique(imgs_mask_train), imgs_mask_train.flatten())
+		class_weights = {0: t[0], 1:t[1]}
+		print(class_weights)
+		model.fit(imgs_train, imgs_mask_train, batch_size=16, nb_epoch=500, verbose=1,validation_split=0.2, class_weight=class_weights, shuffle=True, callbacks=[model_checkpoint])
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
 		np.save('/content/unet-keras/results/imgs_mask_test.npy', imgs_mask_test)
