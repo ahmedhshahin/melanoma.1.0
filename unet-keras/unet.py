@@ -265,7 +265,7 @@ class myUnet(object):
 
 
 if __name__ == '__main__':
-	myunet = myUnet(learning_rate=5e-4)
+	myunet = myUnet(learning_rate=1e-5)
 	myunet.train()
 	myunet.save_img()
 
