@@ -4,10 +4,11 @@ import os
 import glob
 import imageio
 import cv2
+from scipy import misc
 #from libtiff import TIFF
 
 class myAugmentation(object):
-
+	
 	"""
 	A class used to augmentate image
 	Firstly, read train image and label seperately, and then merge them together for the next process
@@ -15,16 +16,20 @@ class myAugmentation(object):
 	Finally, seperate augmentated image apart into train image and label
 	"""
 
-	def __init__(self, out_rows, out_cols, data_path="/content/melanoma.1.0/dataset/train/image",
-				 label_path="/content/melanoma.1.0/dataset/train/label",
-				 test_path="/content/melanoma.1.0/dataset/test", npy_path="/content/unet-keras/npydata",
-				 img_type="jpg"):
+	def __init__(self, train_path="/home/ahmed/github/melanoma.1.0/dataset/2016data/train/image",
+		label_path="/home/ahmed/github/melanoma.1.0/dataset/2016data/train/label",
+		merge_path="/home/ahmed/github/melanoma.1.0/dataset/2016data/aumentation",
+		aug_merge_path="/home/ahmed/github/melanoma.1.0/dataset/2016data/aumentation/aug_merge",
+		aug_train_path="/home/ahmed/github/melanoma.1.0/dataset/2016data/aumentation/aug_train",
+		aug_label_path="/home/ahmed/github/melanoma.1.0/dataset/2016data/aumentation/aug_label",
+		img_type="jpg"):
+		
 		"""
 		Using glob to get all .img_type form path
 		"""
 
-		self.train_imgs = glob.glob(train_path+"/*."+img_type)
-		self.label_imgs = glob.glob(label_path+"/*."+img_type)
+		self.train_imgs = glob.glob(train_path + "/*" + img_type)
+		self.label_imgs = glob.glob(label_path+"/*.png")
 		self.train_path = train_path
 		self.label_path = label_path
 		self.merge_path = merge_path
@@ -57,20 +62,21 @@ class myAugmentation(object):
 		if len(trains) != len(labels) or len(trains) == 0 or len(trains) == 0:
 			print("trains can't match labels")
 			return 0
-		for i in range(len(trains)):
-			img_t = load_img(path_train+"/"+str(i)+"."+imgtype)
-			img_l = load_img(path_label+"/"+str(i)+"."+imgtype)
+		for i in trains:
+			name = i[i.rindex("/")+1:-11]
+			img_t = load_img(i)
+			img_l = load_img(path_label+"/"+ name + "padding_ground.png", grayscale=True)
 			x_t = img_to_array(img_t)
 			x_l = img_to_array(img_l)
-			x_t[:,:,2] = x_l[:,:,0]
-			img_tmp = array_to_img(x_t)
-			img_tmp.save(path_merge+"/"+str(i)+"."+imgtype)
-			img = x_t
+			x = np.dstack((x_t, x_l))
+			
+			# np.save(path_merge+"/"+name+".npy" , x)
+			img = x
 			img = img.reshape((1,) + img.shape)
-			savedir = path_aug_merge + "/" + str(i)
+			savedir = path_aug_merge + "/" + name
 			if not os.path.lexists(savedir):
 				os.mkdir(savedir)
-			self.doAugmentate(img, savedir, str(i))
+			self.doAugmentate(img, savedir, name)
 
 
 	def doAugmentate(self, img, save_to_dir, save_prefix, batch_size=1, save_format='tif', imgnum=30):
@@ -97,22 +103,23 @@ class myAugmentation(object):
 		path_merge = self.aug_merge_path
 		path_train = self.aug_train_path
 		path_label = self.aug_label_path
-		for i in range(self.slices):
-			path = path_merge + "/" + str(i)
-			train_imgs = glob.glob(path+"/*."+self.img_type)
-			savedir = path_train + "/" + str(i)
+		for i in self.train_imgs:
+			name = i[i.rindex("/")+1:-11]
+			path = path_merge + "/" + name
+			train_is = glob.glob(path+"/*.npy")
+			savedir = path_train + "/" + name
 			if not os.path.lexists(savedir):
 				os.mkdir(savedir)
-			savedir = path_label + "/" + str(i)
+			savedir = path_label + "/" + name
 			if not os.path.lexists(savedir):
 				os.mkdir(savedir)
-			for imgname in train_imgs:
-				midname = imgname[imgname.rindex("/")+1:imgname.rindex("."+self.img_type)]
-				img = cv2.imread(imgname)
-				img_train = img[:,:,2]#cv2 read image rgb->bgr
-				img_label = img[:,:,0]
-				cv2.imwrite(path_train+"/"+str(i)+"/"+midname+"_train"+"."+self.img_type,img_train)
-				cv2.imwrite(path_label+"/"+str(i)+"/"+midname+"_label"+"."+self.img_type,img_label)
+			for imgname in train_is:
+				midname = imgname[imgname.rindex("/")+1:imgname.rindex(".npy")]
+				img = np.load(imgname)
+				img_train = img[:,:,:3]#cv2 read image rgb->bgr
+				img_label = img[:,:,3]
+				misc.imsave(path_train+"/"+name+"/"+midname+"_train"+".jpg",img_train)
+				misc.imsave(path_label+"/"+name+"/"+midname+"_label"+".png",img_label)
 
 	def splitTransform(self):
 
