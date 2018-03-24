@@ -2,7 +2,7 @@ import os
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import numpy as np
 from keras.models import *
-from keras.layers import Input, merge, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D
+from keras.layers import Input, merge, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
 from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
@@ -115,16 +115,24 @@ class myUnet(object):
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'valid', kernel_initializer = 'he_normal')(conv9)
 		'''
 
-		conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
+		conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(inputs)
 		print("conv1 shape:",conv1.shape)
-		conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
+		conv1 = BatchNormalization()(conv1)
+		conv1 = Activation('relu')(conv1)
+		conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(conv1)
+		conv1 = BatchNormalization()(conv1)
+		conv1 = Activation('relu')(conv1)
 		print("conv1 shape:",conv1.shape)
 		pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
 		print("pool1 shape:",pool1.shape)
 
-		conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool1)
+		conv2 = Conv2D(128, 3, padding = 'same', kernel_initializer = 'he_normal')(pool1)
 		print("conv2 shape:",conv2.shape)
-		conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv2)
+		conv2 = BatchNormalization()(conv2)
+		conv2 = Activation('relu')(conv2)
+		conv2 = Conv2D(128, 3, padding = 'same', kernel_initializer = 'he_normal')(conv2)
+		conv2 = BatchNormalization()(conv2)
+		conv2 = Activation('relu')(conv2)
 		print("conv2 shape:",conv2.shape)
 		pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
 		print("pool2 shape:",pool2.shape)
@@ -228,7 +236,7 @@ class myUnet(object):
 
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
-		model.compile(optimizer = Adam(lr = self.lr), loss = binary_crossentropy_wt, metrics = [Jac, 'acc'])
+		model.compile(optimizer = Adam(lr = self.lr), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
 
 		return model
 
