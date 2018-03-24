@@ -239,8 +239,8 @@ class dataProcess(object):
 		imgs_test = np.load(self.npy_path+"/imgs_test.npy")
 		imgs_test = imgs_test.astype('float32')
 		imgs_test /= 255
-		#mean = imgs_test.mean(axis = 0)
-		#imgs_test -= mean	
+		mean = imgs_test.mean(axis = 0)
+		imgs_test -= mean	
 		return imgs_test
 
 if __name__ == "__main__":
