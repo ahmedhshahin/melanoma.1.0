@@ -2,7 +2,7 @@ import os
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import numpy as np
 from keras.models import *
-from keras.layers import Input, merge, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
+from keras.layers import Input, merge, Add, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
 from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
@@ -168,7 +168,8 @@ class myUnet(object):
 		up6 = Conv2D(512, 2, padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(drop5))
 		up6 = BatchNormalization()(up6)
 		up6 = Activation('relu')(up6)
-		merge6 = merge([drop4,up6], mode = 'concat', concat_axis = 3)
+		# merge6 = merge([drop4,up6], mode = 'concat', concat_axis = 3)
+		merge6 = Add([drop4, up6])
 		conv6 = Conv2D(512, 3, padding = 'same', kernel_initializer = 'he_normal')(merge6)
 		conv6 = BatchNormalization()(conv6)
 		conv6 = Activation('relu')(conv6)
@@ -179,7 +180,8 @@ class myUnet(object):
 		up7 = Conv2D(256, 2, padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv6))
 		up7 = BatchNormalization()(up7)
 		up7 = Activation('relu')(up7)
-		merge7 = merge([conv3,up7], mode = 'concat', concat_axis = 3)
+		# merge7 = merge([conv3,up7], mode = 'concat', concat_axis = 3)
+		merge7 = Add([conv3, up7])
 		conv7 = Conv2D(256, 3, padding = 'same', kernel_initializer = 'he_normal')(merge7)
 		conv7 = BatchNormalization()(conv7)
 		conv7 = Activation('relu')(conv7)
@@ -190,7 +192,8 @@ class myUnet(object):
 		up8 = Conv2D(128, 2, padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv7))
 		up8 = BatchNormalization()(up8)
 		up8 = Activation('relu')(up8)
-		merge8 = merge([conv2,up8], mode = 'concat', concat_axis = 3)
+		# merge8 = merge([conv2,up8], mode = 'concat', concat_axis = 3)
+		merge8 = Add([conv2, up8])
 		conv8 = Conv2D(128, 3, padding = 'same', kernel_initializer = 'he_normal')(merge8)
 		conv8 = BatchNormalization()(conv8)
 		conv8 = Activation('relu')(conv8)
@@ -201,7 +204,8 @@ class myUnet(object):
 		up9 = Conv2D(64, 2, padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv8))
 		up9 = BatchNormalization()(up9)
 		up9 = Activation('relu')(up9)
-		merge9 = merge([conv1,up9], mode = 'concat', concat_axis = 3)
+		# merge9 = merge([conv1,up9], mode = 'concat', concat_axis = 3)
+		merge9 = Add([conv1, up9])
 		conv9 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(merge9)
 		conv9 = BatchNormalization()(conv9)
 		conv9 = Activation('relu')(conv9)
@@ -274,7 +278,7 @@ class myUnet(object):
 
 
 		# model.compile(optimizer = Adam(lr = 1e-4), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
-		model.compile(optimizer = Adam(lr = self.lr), loss = binary_crossentropy_wt, metrics = [Jac, 'acc'])
+		model.compile(optimizer = Adam(lr = self.lr), loss = ['binary_crossentropy'], metrics = [Jac, 'acc'])
 
 		return model
 
