@@ -191,7 +191,7 @@ class myUnet(object):
 		up8 = BatchNormalization()(up8)
 		up8 = Activation('relu')(up8)
 		merge8 = merge([conv2,up8], mode = 'concat', concat_axis = 3)
-		conv8 = Conv2D(128, 3f, padding = 'same', kernel_initializer = 'he_normal')(merge8)
+		conv8 = Conv2D(128, 3, padding = 'same', kernel_initializer = 'he_normal')(merge8)
 		conv8 = BatchNormalization()(conv8)
 		conv8 = Activation('relu')(conv8)
 		conv8 = Conv2D(128, 3, padding = 'same', kernel_initializer = 'he_normal')(conv8)
