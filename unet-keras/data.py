@@ -201,7 +201,7 @@ class dataProcess(object):
 		for name in imgs:
 			n = name[name.rindex("/")+1:]
 			names.append(n)
-		np.save("/content/unet-keras/names.npy", names)
+		np.save("/content/names.npy", names)
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
