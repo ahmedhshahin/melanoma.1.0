@@ -199,7 +199,7 @@ class dataProcess(object):
 		imgs = glob.glob(self.test_path+"/*."+self.img_type)
 		names = []
 		for name in imgs:
-			n = name[name.rindex("/")+1:-11]
+			n = name[name.rindex("/")+1:name.rindex("/")+8]
 			names.append(n)
 		np.save("/content/unet-keras/names.npy", names)
 		print(len(imgs))
