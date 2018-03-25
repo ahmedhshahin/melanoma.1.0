@@ -309,7 +309,7 @@ class myUnet(object):
 			img = imgs[i]
 			img = array_to_img(img)
 			n = names[i]
-			img.save("/content/results/{0}.jpg".format(n))
+			img.save("/content/unet-keras/results/{0}.jpg".format(n))
 
 
 
