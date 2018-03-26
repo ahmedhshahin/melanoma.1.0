@@ -39,12 +39,13 @@ class myAugmentation(object):
 		self.aug_label_path = aug_label_path
 		self.slices = len(self.train_imgs)
 		self.datagen = ImageDataGenerator(
-							        rotation_range=0.2,
-							        width_shift_range=0.05,
-							        height_shift_range=0.05,
-							        shear_range=0.05,
-							        zoom_range=0.05,
+							        rotation_range=180,
+							        width_shift_range=5,
+							        height_shift_range=5,
+							        shear_range=1,
+							        zoom_range=5,
 							        horizontal_flip=True,
+							        vertical_flip=True,
 							        fill_mode='nearest')
 
 	def Augmentation(self):
@@ -79,7 +80,7 @@ class myAugmentation(object):
 			self.doAugmentate(img, savedir, name)
 
 
-	def doAugmentate(self, img, save_to_dir, save_prefix, batch_size=1, save_format='tif', imgnum=30):
+	def doAugmentate(self, img, save_to_dir, save_prefix, batch_size=1, save_format='tif', imgnum=10):
 
 		"""
 		augmentate one image
