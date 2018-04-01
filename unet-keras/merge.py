@@ -226,6 +226,20 @@ class Chess_board(_Merge):
             for j in range(i % 2, inputs[0].shape[2] ,2):
                 output[:,i,j] = inputs[1][:,i,j]
 
+class Chess_board2(_Merge):
+    def _merge_function(self, inputs):
+        x = inputs[0]
+        y = inputs[1]
+        w = x.shape[1] // 2
+        h = x.shape[2] // 2
+        re = np.r_[ w*[0,1] ]
+        ro = np.r_[ w*[1,0] ]
+        ch = np.row_stack(h*(re, ro))
+        ch = ch.reshape(1, ch.shape[0], ch.shape[1]).repeat(x.shape[0], 0)
+        z1 = ch * x
+        z2 = (1 -ch) * y
+        return (z1 + z2)
+
 
 class Subtract(_Merge):
     """Layer that subtracts two inputs.
@@ -555,6 +569,9 @@ def add(inputs, **kwargs):
 
 def chess_board(inputs, **kwargs):
     return Chess_board(**kwargs)(inputs)
+
+def chess_board2(inputs, **kwargs):
+    return Chess_board2(**kwargs)(inputs)
 
 
 def subtract(inputs, **kwargs):
