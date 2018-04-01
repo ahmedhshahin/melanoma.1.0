@@ -6,6 +6,7 @@ from __future__ import print_function
 
 from ..engine.topology import Layer
 from .. import backend as K
+import numpy as np
 
 
 class _Merge(Layer):
