@@ -8,6 +8,7 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
 from data import *
 from sklearn.utils import class_weight
+import numpy as np
 
 class LossHistory(Callback):
 	def on_train_begin(self, logs={}):
