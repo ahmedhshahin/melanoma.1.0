@@ -224,7 +224,7 @@ class Chess_board(_Merge):
         output = inputs[0]
         for i in range(inputs[0].shape[1]):
             for j in range(i % 2, inputs[0].shape[2] ,2):
-                output[:,i,j] = y[:,i,j]
+                output[:,i,j] = inputs[1][:,i,j]
 
 
 class Subtract(_Merge):
