@@ -2,7 +2,7 @@ import os
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import numpy as np
 from keras.models import *
-from keras.layers import Input, Chess_board, Concatenate, Maximum, merge, Add, Average, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
+from keras.layers import Input, Chess_board2, Concatenate, Maximum, merge, Add, Average, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
 from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
@@ -169,7 +169,7 @@ class myUnet(object):
 		up6 = BatchNormalization()(up6)
 		up6 = Activation('relu')(up6)
 		# merge6 = merge([drop4,up6], mode = 'concat', concat_axis = 3)
-		merge6 = Chess_board()([drop4, up6])
+		merge6 = Chess_board2()([drop4, up6])
 		conv6 = Conv2D(512, 3, padding = 'same', kernel_initializer = 'he_normal')(up6)
 		conv6 = BatchNormalization()(conv6)
 		conv6 = Activation('relu')(conv6)
@@ -181,7 +181,7 @@ class myUnet(object):
 		up7 = BatchNormalization()(up7)
 		up7 = Activation('relu')(up7)
 		# merge7 = merge([conv3,up7], mode = 'concat', concat_axis = 3)
-		merge7 = Chess_board()([conv3, up7])
+		merge7 = Chess_board2()([conv3, up7])
 		conv7 = Conv2D(256, 3, padding = 'same', kernel_initializer = 'he_normal')(up7)
 		conv7 = BatchNormalization()(conv7)
 		conv7 = Activation('relu')(conv7)
@@ -193,7 +193,7 @@ class myUnet(object):
 		up8 = BatchNormalization()(up8)
 		up8 = Activation('relu')(up8)
 		# merge8 = merge([conv2,up8], mode = 'concat', concat_axis = 3)
-		merge8 = Chess_board()([conv2, up8])
+		merge8 = Chess_board2()([conv2, up8])
 		conv8 = Conv2D(128, 3, padding = 'same', kernel_initializer = 'he_normal')(up8)
 		conv8 = BatchNormalization()(conv8)
 		conv8 = Activation('relu')(conv8)
@@ -205,7 +205,7 @@ class myUnet(object):
 		up9 = BatchNormalization()(up9)
 		up9 = Activation('relu')(up9)
 		# merge9 = merge([conv1,up9], mode = 'concat', concat_axis = 3)
-		merge9 = Chess_board()([conv1, up9])
+		merge9 = Chess_board2()([conv1, up9])
 		conv9 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(up9)
 		conv9 = BatchNormalization()(conv9)
 		conv9 = Activation('relu')(conv9)
