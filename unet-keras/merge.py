@@ -7,7 +7,7 @@ from __future__ import print_function
 from ..engine.topology import Layer
 from .. import backend as K
 import numpy as np
-
+import tensorflow as tf
 
 class _Merge(Layer):
     """Generic merge layer for elementwise merge functions.
