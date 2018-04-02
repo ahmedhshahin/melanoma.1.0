@@ -236,7 +236,7 @@ class Chess_board2(_Merge):
     repeats: A list. Number of repeat for each dimension, length must be the same as the number of dimensions in input
 
     Returns:
-    
+
     A Tensor. Has the same type as input. Has the shape of tensor.shape * repeats
     """
         with tf.variable_scope("repeat"):
@@ -245,6 +245,7 @@ class Chess_board2(_Merge):
             tiled_tensor = tf.tile(expanded_tensor, multiples = multiples)
             repeated_tesnor = tf.reshape(tiled_tensor, tf.shape(tensor) * repeats)
         return repeated_tesnor
+    
     def _merge_function(self, inputs):
         x = inputs[0]
         y = inputs[1]
