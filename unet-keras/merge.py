@@ -7,7 +7,7 @@ from __future__ import print_function
 from ..engine.topology import Layer
 from .. import backend as K
 import numpy as np
-import tensorflow as tf
+import tensorflow as tf 
 
 class _Merge(Layer):
     """Generic merge layer for elementwise merge functions.
@@ -242,7 +242,10 @@ class Chess_board2(_Merge):
         x = inputs[0]
         y = inputs[1]
         h = x.shape[1] // 2
-        w = x.shape[2] // 2
+        w = x.shape[2] // 
+        print("+++++++++++++++++++++++++++++++++++++")
+        print(x.shape)
+        print("+++++++++++++++++++++++++++++++++++++")
         re = tf.stack( w*[0,1] )
         ro = tf.stack( w*[1,0] )
         ch = tf.stack(h*(re, ro))
