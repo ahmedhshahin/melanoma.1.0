@@ -242,7 +242,7 @@ class Chess_board2(_Merge):
         x = inputs[0]
         y = inputs[1]
         h = x.shape[1] // 2
-        w = x.shape[2] // 
+        w = x.shape[2] // 2
         print("+++++++++++++++++++++++++++++++++++++")
         print(x.shape)
         print("+++++++++++++++++++++++++++++++++++++")
