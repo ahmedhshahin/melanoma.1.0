@@ -245,7 +245,7 @@ class Chess_board2(_Merge):
             tiled_tensor = tf.tile(expanded_tensor, multiples = multiples)
             repeated_tesnor = tf.reshape(tiled_tensor, tf.shape(tensor) * repeats)
         return repeated_tesnor
-    
+
     def _merge_function(self, inputs):
         x = inputs[0]
         y = inputs[1]
