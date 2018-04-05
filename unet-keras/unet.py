@@ -2,7 +2,7 @@ import os
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import numpy as np
 from keras.models import *
-from keras.layers import Input, Chess_board2, Concatenate, Maximum, merge, Add, Average, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
+from keras.layers import Input, Concatenate, Maximum, merge, Add, Average, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
 from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
