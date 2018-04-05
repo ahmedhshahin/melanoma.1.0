@@ -116,7 +116,7 @@ class myUnet(object):
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'valid', kernel_initializer = 'he_normal')(conv9)
 		'''
 
-		conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(inputs)
+		conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal', input_shape=(256,256,3))(inputs)
 		print("conv1 shape:",conv1.shape)
 		conv1 = BatchNormalization()(conv1)
 		conv1 = Activation('relu')(conv1)
