@@ -222,6 +222,7 @@ class dataProcess(object):
 			img = img_to_array(img)
 			imgfft = load_img(self.test_path + "/" + midname, grayscale=True)
 			imgfft = np.fft.fftshift(np.fft.fft2(imgfft))
+			imgfft = 20*np.log(np.abs(imgfft))
 			imgfft = img_to_array(imgfft)
 			#img = cv2.imread(self.test_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#img = np.array([img])
@@ -266,9 +267,9 @@ class dataProcess(object):
 		imgs_test = imgs_test.astype('float32')
 		imgs_test[..., :3] /= 255
 		# mean = imgs_test.mean(axis = 0)
-		imgs_test[..., :3] -= self.mean[np.newaxis, :, :, 0]
+		imgs_test[..., :3] -= self.mean
 
-		imgs_test[..., 3] -= self.mean_fft
+		imgs_test[..., 3] -= self.mean_fft[np.newaxis, :, :, 0]
 		imgs_test[..., 3] /= self.range_fft
 		return imgs_test
 
