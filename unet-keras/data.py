@@ -171,9 +171,11 @@ class dataProcess(object):
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,3), dtype=np.uint8)
 		imglabels = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
+		imgffts = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
 			img = load_img(self.data_path + "/" + midname,grayscale = False)
+			img_gray = load_img(self.data_path + "/" + midname, grayscale = True)
 			label = load_img(self.label_path + "/" + midname.replace(".jpg","_ground.png"), grayscale=True)
 			img = img_to_array(img)
 			label = img_to_array(label)
@@ -183,6 +185,13 @@ class dataProcess(object):
 			#label = np.array([label])
 			imgdatas[i] = img
 			imglabels[i] = label
+
+			fft_img = np.fft.fft2(img_gray)
+			fft_img = np.fft.fftshift(fft_img)
+			fft_img = 20*np.log(np.abs(fft_img))
+			fft_img = img_to_array(fft_img)
+			imgffts[i] = fft_img
+
 			# imglabels[i, ..., 1] = 255 - label
 			if i % 100 == 0:
 				print('Done: {0}/{1} images'.format(i, len(imgs)))
@@ -190,6 +199,7 @@ class dataProcess(object):
 		print('loading done')
 		np.save(self.npy_path + '/imgs_train.npy', imgdatas)
 		np.save(self.npy_path + '/imgs_mask_train.npy', imglabels)
+		np.save(self.npy_path + '/imgs_fft_train.npy', imgffts)
 		print('Saving to .npy files done.')
 
 	def create_test_data(self):
@@ -204,14 +214,18 @@ class dataProcess(object):
 			names.append(n)
 		np.save("/content/unet-keras/names.npy", names)
 		print(len(imgs))
-		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,3), dtype=np.uint8)
+		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,4), dtype=np.uint8)
+		# imgffts = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
 			img = load_img(self.test_path + "/" + midname,grayscale = False)
 			img = img_to_array(img)
+			imgfft = load_img(self.test_path + "/" + midname, grayscale=True)
+			imgfft = np.fft.fftshift(np.fft.fft2(imgfft))
+			imgfft = img_to_array(imgfft)
 			#img = cv2.imread(self.test_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#img = np.array([img])
-			imgdatas[i] = img
+			imgdatas[i] = np.concatenate((img, imgfft), axis=2)
 			i += 1
 		print('loading done')
 		np.save(self.npy_path + '/imgs_test.npy', imgdatas)
@@ -223,15 +237,26 @@ class dataProcess(object):
 		print('-'*30)
 		imgs_train = np.load(self.npy_path+"/imgs_train.npy")
 		imgs_mask_train = np.load(self.npy_path+"/imgs_mask_train.npy")
+		imgs_fft = np.load(self.npy_path + "/imgs_fft_train.npy")
 		imgs_train = imgs_train.astype('float32')
 		imgs_mask_train = imgs_mask_train.astype('float32')
+		imgs_fft = imgs_fft.astype('float32')
+
+		self.mean_fft = imgs_fft.mean(axis = 0)
+		self.range_fft = (imgs_fft.max() - imgs_fft.min())
+		imgs_fft -= self.mean_fft
+		imgs_fft /= self.range_fft
 		imgs_train /= 255
 		self.mean = imgs_train.mean(axis = 0)
 		imgs_train -= self.mean	
 		imgs_mask_train /= 255
 		imgs_mask_train[imgs_mask_train > 0.5] = 1
 		imgs_mask_train[imgs_mask_train <= 0.5] = 0
-		return imgs_train,imgs_mask_train
+
+		train = np.zeros((imgs_train.shape[0], imgs_train.shape[1], imgs_train.shape[2], 4))
+		for i, img in enumerate(imgs_train):
+			train[i] = np.concatenate((imgs_train[i], imgs_fft[i]), axis=2)
+		return train,imgs_mask_train
 
 	def load_test_data(self):
 		print('-'*30)
@@ -239,9 +264,12 @@ class dataProcess(object):
 		print('-'*30)
 		imgs_test = np.load(self.npy_path+"/imgs_test.npy")
 		imgs_test = imgs_test.astype('float32')
-		imgs_test /= 255
+		imgs_test[..., :3] /= 255
 		# mean = imgs_test.mean(axis = 0)
-		imgs_test -= self.mean	
+		imgs_test[..., :3] -= self.mean
+
+		imgs_test[..., 3] -= self.mean_fft
+		imgs_test[..., 3] /= self.range_fft
 		return imgs_test
 
 if __name__ == "__main__":
