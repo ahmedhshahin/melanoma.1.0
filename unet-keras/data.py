@@ -266,7 +266,7 @@ class dataProcess(object):
 		imgs_test = imgs_test.astype('float32')
 		imgs_test[..., :3] /= 255
 		# mean = imgs_test.mean(axis = 0)
-		imgs_test[..., :3] -= self.mean
+		imgs_test[..., :3] -= self.mean[np.newaxis, :, :, 0]
 
 		imgs_test[..., 3] -= self.mean_fft
 		imgs_test[..., 3] /= self.range_fft
