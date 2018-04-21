@@ -53,6 +53,53 @@ class myUnet(object):
 	def get_unet(self):
 
 		inputs = Input((self.img_rows, self.img_cols,4))
+		# inputs = inputs[:, :, :, :2]
+		# input_fft = inputs[:, :, :, 2]
+		print("++++++++++++++++++++++++++++")
+		print(inputs.shape)
+		print("++++++++++++++++++++++++++++")
+
+		c1 = Conv2D(64, 3, padding= 'same', kernel_initializer = 'he_normal')(inputs[..., :2])
+		c1 = BatchNormalization()(c1)
+		c1 = Activation('relu')(c1)
+		c1 = Conv2D(64, 3, padding= 'same', kernel_initializer = 'he_normal')(c1)
+		c1 = BatchNormalization()(c1)
+		c1 = Activation('relu')(c1)
+		p1 = MaxPooling2D(pool_size=(2,2))(c1)
+		print("p1 shape", p1.shape)
+
+		c2 = Conv2D(128, 3, padding= 'same', kernel_initializer = 'he_normal')(p1)
+		c2 = BatchNormalization()(c2)
+		c2 = Activation('relu')(c2)
+		c2 = Conv2D(128, 3, padding= 'same', kernel_initializer = 'he_normal')(c2)
+		c2 = BatchNormalization()(c2)
+		c2 = Activation('relu')(c2)
+		p2 = MaxPooling2D(pool_size=(2,2))(c2)
+		print("p2 shape", p2.shape)
+
+		c3 = Conv2D(256, 3, padding= 'same', kernel_initializer = 'he_normal')(p2)
+		c3 = BatchNormalization()(c3)
+		c3 = Activation('relu')(c3)
+		c3 = Conv2D(256, 3, padding= 'same', kernel_initializer = 'he_normal')(c3)
+		c3 = BatchNormalization()(c3)
+		c3 = Activation('relu')(c3)
+		p3 = MaxPooling2D(pool_size=(2,2))(c3)
+		print("p3 shape", p3.shape)
+
+		c4 = Conv2D(512, 3, padding= 'same', kernel_initializer = 'he_normal')(p3)
+		c4 = BatchNormalization()(c4)
+		c4 = Activation('relu')(c4)
+		c4 = Conv2D(512, 3, padding= 'same', kernel_initializer = 'he_normal')(c4)
+		c4 = BatchNormalization()(c4)
+		c4 = Activation('relu')(c4)
+		p4 = MaxPooling2D(pool_size=(2,2))(c4)
+		print("p4 shape", p4.shape)
+
+		c5 = Conv2D(1024, 3, padding= 'same', kernel_initializer = 'he_normal')(p4)
+		c5 = Conv2D(1024, 3, padding= 'same', kernel_initializer = 'he_normal')(c5)
+		print("p5 shape", c5.shape)
+		print("============================================================")
+		# conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(inputs)
 		
 		'''
 		unet with crop(because padding = valid) 
@@ -165,8 +212,11 @@ class myUnet(object):
 		conv5 = BatchNormalization()(conv5)
 		conv5 = Activation('relu')(conv5)
 		drop5 = Dropout(0.5)(conv5)
+		print("DROP 5", drop5.shape)
 
-		up6 = Conv2D(512, 2, padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(drop5))
+		merge_fft = Concatenate()([drop5, c5])
+		print("MERGE FFT", merge_fft.shape)
+		up6 = Conv2D(512, 2, padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(merge_fft))
 		up6 = BatchNormalization()(up6)
 		up6 = Activation('relu')(up6)
 		# merge6 = merge([drop4,up6], mode = 'concat', concat_axis = 3)
@@ -317,8 +367,8 @@ class myUnet(object):
 
 if __name__ == '__main__':
 	myunet = myUnet(learning_rate=7e-4)
-	myunet.train()
-	myunet.save_img()
+	# myunet.train()
+	# myunet.save_img()
 
 
 
