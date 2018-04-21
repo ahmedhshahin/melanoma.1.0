@@ -59,7 +59,8 @@ class myUnet(object):
 		print(inputs.shape)
 		print("++++++++++++++++++++++++++++")
 
-		c1 = Conv2D(64, 3, padding= 'same', kernel_initializer = 'he_normal')(inputs[..., 2])
+		i = model.add(Reshape((self.img_rows, self.img_cols, 1), input_shape=(self.img_rows, self.img_cols)))(inputs[...,2])
+		c1 = Conv2D(64, 3, padding= 'same', kernel_initializer = 'he_normal')(i)
 		c1 = BatchNormalization()(c1)
 		c1 = Activation('relu')(c1)
 		c1 = Conv2D(64, 3, padding= 'same', kernel_initializer = 'he_normal')(c1)
