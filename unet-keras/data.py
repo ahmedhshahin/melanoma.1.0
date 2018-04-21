@@ -254,10 +254,10 @@ class dataProcess(object):
 		imgs_mask_train[imgs_mask_train > 0.5] = 1
 		imgs_mask_train[imgs_mask_train <= 0.5] = 0
 
-		train = np.zeros((imgs_train.shape[0], imgs_train.shape[1], imgs_train.shape[2], 4))
-		for i, img in enumerate(imgs_train):
-			train[i] = np.concatenate((imgs_train[i], imgs_fft[i]), axis=2)
-		return train,imgs_mask_train
+		# train = np.zeros((imgs_train.shape[0], imgs_train.shape[1], imgs_train.shape[2], 4))
+		# for i, img in enumerate(imgs_train):
+		# 	train[i] = np.concatenate((imgs_train[i], imgs_fft[i]), axis=2)
+		return imgs_fft, imgs_train, imgs_mask_train
 
 	def load_test_data(self):
 		print('-'*30)
