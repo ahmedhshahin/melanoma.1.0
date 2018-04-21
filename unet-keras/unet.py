@@ -2,7 +2,7 @@ import os
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import numpy as np
 from keras.models import *
-from keras.layers import Input, Concatenate, Maximum, merge, Add, Average, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
+from keras.layers import Input, Reshape, Concatenate, Maximum, merge, Add, Average, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
 from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
@@ -59,7 +59,7 @@ class myUnet(object):
 		print(inputs.shape)
 		print("++++++++++++++++++++++++++++")
 
-		i = model.add(Reshape((self.img_rows, self.img_cols, 1), input_shape=(self.img_rows, self.img_cols)))(inputs[...,2])
+		i = Reshape((self.img_rows, self.img_cols, 1), input_shape=(self.img_rows, self.img_cols))(inputs[...,2])
 		c1 = Conv2D(64, 3, padding= 'same', kernel_initializer = 'he_normal')(i)
 		c1 = BatchNormalization()(c1)
 		c1 = Activation('relu')(c1)
