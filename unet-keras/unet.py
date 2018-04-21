@@ -46,20 +46,21 @@ class myUnet(object):
 		mydata.create_test_data()
 
 		###
-		imgs_train, imgs_mask_train = mydata.load_train_data()
+		imgs_fft, imgs_train, imgs_mask_train = mydata.load_train_data()
 		imgs_test = mydata.load_test_data()
-		return imgs_train, imgs_mask_train, imgs_test
+		return imgs_fft, imgs_train, imgs_mask_train, imgs_test
 
 	def get_unet(self):
 
-		inputs = Input((self.img_rows, self.img_cols,4))
+		inputs = [Input((self.img_rows, self.img_cols,1)), Input((self.img_rows, self.img_cols, 3))]
 		# inputs = inputs[:, :, :, :2]
 		# input_fft = inputs[:, :, :, 2]
 		print("++++++++++++++++++++++++++++")
 		print(inputs.shape)
 		print("++++++++++++++++++++++++++++")
 
-		i = Reshape((self.img_rows, self.img_cols, 1), input_shape=(self.img_rows, self.img_cols))(inputs[...,3])
+		# i = Reshape((self.img_rows, self.img_cols, 1), input_shape=(self.img_rows, self.img_cols))(inputs[...,3])
+		i = inputs[0]
 		c1 = Conv2D(64, 3, padding= 'same', kernel_initializer = 'he_normal')(i)
 		c1 = BatchNormalization()(c1)
 		c1 = Activation('relu')(c1)
@@ -164,7 +165,8 @@ class myUnet(object):
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'valid', kernel_initializer = 'he_normal')(conv9)
 		'''
 
-		conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(inputs[..., :3])
+		j = inputs[1]
+		conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(j)
 		print("conv1 shape:",conv1.shape)
 		conv1 = BatchNormalization()(conv1)
 		conv1 = Activation('relu')(conv1)
@@ -339,7 +341,7 @@ class myUnet(object):
 	def train(self):
 
 		print("loading data")
-		imgs_train, imgs_mask_train, imgs_test = self.load_data()
+		imgs_fft, imgs_train, imgs_mask_train, imgs_test = self.load_data()
 		print("loading data done")
 		model = self.get_unet()
 		print("got unet")
@@ -347,7 +349,7 @@ class myUnet(object):
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
 		# t = class_weight.compute_class_weight('balanced', np.unique(imgs_mask_train), imgs_mask_train.flatten())
-		model.fit(imgs_train, imgs_mask_train, batch_size=8	, epochs=200, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		model.fit([imgs_fft, imgs_train], imgs_mask_train, batch_size=8	, epochs=200, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
 		print('predict test data')
 		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
 		np.save('/content/unet-keras/results/imgs_mask_test.npy', imgs_mask_test)
