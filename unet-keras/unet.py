@@ -2,7 +2,7 @@ import os
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import numpy as np
 from keras.models import *
-from keras.layers import Input, RepeatVector, Flatten, Dense, Reshape, Concatenate, Maximum, merge, Add, Average, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
+from keras.layers import Input, Multiply, RepeatVector, Flatten, Dense, Reshape, Concatenate, Maximum, merge, Add, Average, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, BatchNormalization, Activation
 from keras.optimizers import *
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras import backend as keras
@@ -65,19 +65,19 @@ class myUnet(object):
 		p2 = MaxPooling2D(pool_size=(2,2))(p1)
 		p3 = MaxPooling2D(pool_size=(2,2))(p2)
 
-		D1 = Flatten()(p3)
+		# D1 = Flatten()(p3)
 		D1 = Dense(256, use_bias=True, kernel_initializer='he_normal')(D1)
 		D1 = BatchNormalization()(D1)
 		D1 = Activation('relu')(D1)
-		D2 = Dense(1024, use_bias=True, kernel_initializer='he_normal')(D1)
+		D2 = Dense(512, use_bias=True, kernel_initializer='he_normal')(D1)
 		D2 = BatchNormalization()(D2)
 		D2 = Activation('relu')(D2)
-		D2 = RepeatVector(16)(D2)
-		D2 = keras.expand_dims(D2, axis=1)
-		F = keras.repeat_elements(D2, 16, axis=1)
-		# F = MaxPooling2D(pool_size=(2,2))(D2)
+		# o = keras.ones((8,16,16,512))
+		# D2 = Multiply()([D2, o])
+		# F = keras.repeat_elements(D2, 16, axis=1)
+		F = MaxPooling2D(pool_size=(2,2))(D2)
 		print("==========================")
-		print("Shape is:", F.shape)
+		print("Shape is:", D2.shape)
 		print("==========================")
 		
 		
