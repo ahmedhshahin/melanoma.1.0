@@ -66,7 +66,7 @@ class myUnet(object):
 		p3 = MaxPooling2D(pool_size=(2,2))(p2)
 
 		# D1 = Flatten()(p3)
-		D1 = Dense(256, use_bias=True, kernel_initializer='he_normal')(D1)
+		D1 = Dense(256, use_bias=True, kernel_initializer='he_normal')(p3)
 		D1 = BatchNormalization()(D1)
 		D1 = Activation('relu')(D1)
 		D2 = Dense(512, use_bias=True, kernel_initializer='he_normal')(D1)
