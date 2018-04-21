@@ -70,14 +70,14 @@ class myUnet(object):
 		D1 = BatchNormalization()(D1)
 		D1 = Activation('relu')(D1)
 		D2 = Dense(512, use_bias=True, kernel_initializer='he_normal')(D1)
-		D2 = BatchNormalization()(D1)
+		D2 = BatchNormalization()(D2)
 		D2 = Activation('relu')(D2)
 		D2 = RepeatVector(16)(D2)
 		D2 = keras.expand_dims(D2, axis=1)
 		F = keras.repeat_elements(D2, 16, axis=1)
 		# F = MaxPooling2D(pool_size=(2,2))(D2)
 		print("==========================")
-		print("Shape is:", D2.shape)
+		print("Shape is:", F.shape)
 		print("==========================")
 		
 		
