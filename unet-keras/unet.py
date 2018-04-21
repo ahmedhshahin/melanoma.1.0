@@ -56,7 +56,7 @@ class myUnet(object):
 		# inputs = inputs[:, :, :, :2]
 		# input_fft = inputs[:, :, :, 2]
 		print("++++++++++++++++++++++++++++")
-		print(inputs.shape)
+		# print(inputs.shape)
 		print("++++++++++++++++++++++++++++")
 
 		# i = Reshape((self.img_rows, self.img_cols, 1), input_shape=(self.img_rows, self.img_cols))(inputs[...,3])
