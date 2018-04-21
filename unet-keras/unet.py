@@ -59,7 +59,7 @@ class myUnet(object):
 		print(inputs.shape)
 		print("++++++++++++++++++++++++++++")
 
-		i = Reshape((self.img_rows, self.img_cols, 1), input_shape=(self.img_rows, self.img_cols))(inputs[...,2])
+		i = Reshape((self.img_rows, self.img_cols, 1), input_shape=(self.img_rows, self.img_cols))(inputs[...,3])
 		c1 = Conv2D(64, 3, padding= 'same', kernel_initializer = 'he_normal')(i)
 		c1 = BatchNormalization()(c1)
 		c1 = Activation('relu')(c1)
@@ -164,7 +164,7 @@ class myUnet(object):
 		conv9 = Conv2D(2, 3, activation = 'relu', padding = 'valid', kernel_initializer = 'he_normal')(conv9)
 		'''
 
-		conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(inputs[..., 2])
+		conv1 = Conv2D(64, 3, padding = 'same', kernel_initializer = 'he_normal')(inputs[..., :3])
 		print("conv1 shape:",conv1.shape)
 		conv1 = BatchNormalization()(conv1)
 		conv1 = Activation('relu')(conv1)
