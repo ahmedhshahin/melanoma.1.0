@@ -65,8 +65,8 @@ class myUnet(object):
 		p2 = MaxPooling2D(pool_size=(2,2))(p1)
 		p3 = MaxPooling2D(pool_size=(2,2))(p2)
 
-		# D1 = Flatten()(p3)
-		D1 = Dense(256, use_bias=True, kernel_initializer='he_normal')(p3)
+		D1 = Flatten()(p3)
+		D1 = Dense(256, use_bias=True, kernel_initializer='he_normal')(D1)
 		D1 = BatchNormalization()(D1)
 		D1 = Activation('relu')(D1)
 		D2 = Dense(512, use_bias=True, kernel_initializer='he_normal')(D1)
@@ -75,9 +75,11 @@ class myUnet(object):
 		# o = keras.ones((8,16,16,512))
 		# D2 = Multiply()([D2, o])
 		# F = keras.repeat_elements(D2, 16, axis=1)
-		F = MaxPooling2D(pool_size=(2,2))(D2)
+		# F = MaxPooling2D(pool_size=(2,2))(D2)
+		D2 = RepeatVector(256)(D2)
+		F = Reshape((16,16,512))(D2)
 		print("==========================")
-		print("Shape is:", D2.shape)
+		print("Shape is:", F.shape)
 		print("==========================")
 		
 		
