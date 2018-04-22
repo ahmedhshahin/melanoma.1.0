@@ -214,7 +214,7 @@ class dataProcess(object):
 			names.append(n)
 		np.save("/content/unet-keras/names.npy", names)
 		print(len(imgs))
-		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,4), dtype=np.uint8)
+		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,3), dtype=np.uint8)
 		imgffts = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
