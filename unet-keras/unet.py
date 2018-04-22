@@ -47,8 +47,8 @@ class myUnet(object):
 
 		###
 		imgs_fft, imgs_train, imgs_mask_train = mydata.load_train_data()
-		imgs_test = mydata.load_test_data()
-		return imgs_fft, imgs_train, imgs_mask_train, imgs_test
+		imgs_test_fft, imgs_test = mydata.load_test_data()
+		return imgs_fft, imgs_train, imgs_mask_train, imgs_test_fft, imgs_test
 
 	def get_unet(self):
 
@@ -362,7 +362,7 @@ class myUnet(object):
 	def train(self):
 
 		print("loading data")
-		imgs_fft, imgs_train, imgs_mask_train, imgs_test = self.load_data()
+		imgs_fft, imgs_train, imgs_mask_train, imgs_test_fft, imgs_test = self.load_data()
 		print("loading data done")
 		model = self.get_unet()
 		print("got unet")
@@ -370,9 +370,9 @@ class myUnet(object):
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
 		# t = class_weight.compute_class_weight('balanced', np.unique(imgs_mask_train), imgs_mask_train.flatten())
-		history = model.fit([imgs_fft, imgs_train], imgs_mask_train, batch_size=8	, epochs=2, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		history = model.fit([imgs_fft, imgs_train], imgs_mask_train, batch_size=8, epochs=2, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
 		print('predict test data')
-		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
+		imgs_mask_test = model.predict([imgs_test_fft, imgs_test], batch_size=1, verbose=1)
 		np.save('/content/unet-keras/results/imgs_mask_test.npy', imgs_mask_test)
 		np.save('/content/unet-keras/results/tr_loss.npy', history.history['loss'])
 		np.save('/content/unet-keras/results/val_loss.npy', history.history['val_loss'])
