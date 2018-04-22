@@ -273,7 +273,7 @@ class dataProcess(object):
 		# mean = imgs_test.mean(axis = 0)
 		imgs_test -= self.mean
 
-		imgs_test_fft -= self.mean_fft[np.newaxis, :, :, 0]
+		imgs_test_fft -= self.mean_fft
 		imgs_test_fft /= self.range_fft
 		return imgs_test_fft, imgs_test
 
