@@ -375,6 +375,7 @@ class myUnet(object):
 		imgs_mask_test = model.predict([imgs_test_fft, imgs_test], batch_size=1, verbose=1)
 		np.save('/content/unet-keras/results/imgs_mask_test.npy', imgs_mask_test)
 		np.save('/content/unet-keras/results/tr_loss.npy', history.history['loss'])
+		np.save('/content/unet-keras/results/val_Jac.npy', history.history['val_Jac'])
 		np.save('/content/unet-keras/results/val_loss.npy', history.history['val_loss'])
 		
 
