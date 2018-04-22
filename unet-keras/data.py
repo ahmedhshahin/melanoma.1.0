@@ -215,7 +215,7 @@ class dataProcess(object):
 		np.save("/content/unet-keras/names.npy", names)
 		print(len(imgs))
 		imgdatas = np.ndarray((len(imgs),self.out_rows,self.out_cols,4), dtype=np.uint8)
-		# imgffts = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
+		imgffts = np.ndarray((len(imgs),self.out_rows,self.out_cols,1), dtype=np.uint8)
 		for imgname in imgs:
 			midname = imgname[imgname.rindex("/")+1:]
 			img = load_img(self.test_path + "/" + midname,grayscale = False)
@@ -226,10 +226,12 @@ class dataProcess(object):
 			imgfft = img_to_array(imgfft)
 			#img = cv2.imread(self.test_path + "/" + midname,cv2.IMREAD_GRAYSCALE)
 			#img = np.array([img])
-			imgdatas[i] = np.concatenate((img, imgfft), axis=2)
+			imgdatas[i] = img
+			imgftts[i] = imgfft
 			i += 1
 		print('loading done')
 		np.save(self.npy_path + '/imgs_test.npy', imgdatas)
+		np.save(self.npy_path + '/imgs_test_fft.npy', imgffts)
 		print('Saving to imgs_test.npy files done.')
 
 	def load_train_data(self):
@@ -264,14 +266,16 @@ class dataProcess(object):
 		print('load test images...')
 		print('-'*30)
 		imgs_test = np.load(self.npy_path+"/imgs_test.npy")
+		imgs_test_fft = np.load(self.npy_path + '/imgs_test_fft.npy')
 		imgs_test = imgs_test.astype('float32')
-		imgs_test[..., :3] /= 255
+		imgs_test_fft = imgs_test_fft.astype('float32')
+		imgs_test /= 255
 		# mean = imgs_test.mean(axis = 0)
-		imgs_test[..., :3] -= self.mean
+		imgs_test -= self.mean
 
-		imgs_test[..., 3] -= self.mean_fft[np.newaxis, :, :, 0]
-		imgs_test[..., 3] /= self.range_fft
-		return imgs_test
+		imgs_test_fft -= self.mean_fft[np.newaxis, :, :, 0]
+		imgs_test_fft /= self.range_fft
+		return imgs_test_fft, imgs_test
 
 if __name__ == "__main__":
 
