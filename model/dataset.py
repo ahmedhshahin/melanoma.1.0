@@ -48,8 +48,7 @@ class Melanoma(Dataset):
 	def __getitem__(self, index):
 
 		if self.is_test:
-			img = Image.open(self.imgs[index])
-			print("AAAAAAAAAAAAAAAAAAAAAAAA")
+			img = misc.imread(self.imgs[index])
 			label = None
 		else:
 			img = Image.open(self.imgs[index])

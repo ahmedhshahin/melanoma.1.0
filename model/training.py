@@ -130,7 +130,7 @@ class Training():
             count += 1
             loss = final_layer_loss / self.max_count
             loss.backward()
-            epoch_loss += final_layer_loss.data[0]
+            epoch_loss += final_layer_loss.item()
             if count == self.max_count:
                 self.optimizer.step()
                 count = 0
