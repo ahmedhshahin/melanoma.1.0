@@ -169,11 +169,9 @@ class Training():
         cnt = 0
         for images, labels in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
-            x = self.net(images).cpu().data.numpy()
-            print x.shape
-            pred[cnt] = x.flatten()
-            y[cnt] = labels.cpu().numpy().astype(np.uint8).flatten()
-            cnt += 1
+            pred[cnt:cnt+4] = self.net(images).cpu().data.numpy().reshape(4, -1)
+            y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8).reshape(4, -1)
+            cnt += 4
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
         mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
         return mean_loss[0]
