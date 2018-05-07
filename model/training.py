@@ -82,6 +82,7 @@ class Training():
         self.dataset_train = dataset(**train_params)
         self.dataset_val = dataset(**val_params)
         self.dataset_test = dataset(**test_params)
+        print(dataset_train.size)
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
         self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
         self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
@@ -174,7 +175,7 @@ class Training():
             cnt += 1
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
         mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
-        return mean_loss
+        return mean_loss[0]
 
     def val_batches_with_aug(self):
         self.net.eval()
