@@ -19,8 +19,8 @@ def calc_jaccard(x,y):
 
 def soft_dice_loss(inputs, targets):
     num = targets.size(0)
-    m1  = inputs.view(num,-1)
-    m2  = targets.view(num,-1)
+    m1  = inputs.view(num,-1).float()
+    m2  = targets.view(num,-1).float()
     intersection = (m1 * m2)
     eps = 1e-8
     score = 2. * (intersection.sum(1) + eps) / (m1.sum(1) + m2.sum(1) + eps)
