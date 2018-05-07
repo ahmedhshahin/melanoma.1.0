@@ -77,12 +77,13 @@ class Training():
 
         transformations = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.51892472, 0.4431646,  0.40640972], [0.37666158, 0.33505249, 0.32253156])])
 
-        
+
         dataset_train = dataset(**train_params)
         dataset_val = dataset(**val_params)
         dataset_test = dataset(**test_params)
         self.train_loader = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size_train, shuffle=True)
-        print(dataset_train.__len__())
+        print(dataset_val.__len__())
+        print(dataset_test.__len__())
         self.val_loader = torch.utils.data.DataLoader(dataset_val, batch_size=batch_size_val, shuffle=False)
         self.test_loader = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuffle=False)
 
