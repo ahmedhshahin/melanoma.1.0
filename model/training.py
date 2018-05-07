@@ -164,8 +164,8 @@ class Training():
         self.net.eval()
         # Test the Model
         # m = self.n - int(self.n*0.75)
-        pred = np.zeros((self.dataset_val.__len__(), 256 * 256))
-        y = np.zeros((self.dataset_val.__len__(), 256 * 256), dtype = np.uint8)
+        pred = np.zeros((self.dataset_val.__len__(), 512 * 512))
+        y = np.zeros((self.dataset_val.__len__(), 512 * 512), dtype = np.uint8)
         cnt = 0
         for images, labels in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
@@ -180,13 +180,13 @@ class Training():
         self.net.eval()
         # Test the Model
         # m = self.n - int(self.n*0.75)
-        pred = np.zeros((self.dataset_val.__len__(), 256 * 256))
-        y = np.zeros((self.dataset_val.__len__(), 256 * 256), dtype = np.uint8)
+        pred = np.zeros((self.dataset_val.__len__(), 512 * 512))
+        y = np.zeros((self.dataset_val.__len__(), 512 * 512), dtype = np.uint8)
         cnt = 0
         op = -1
         for img, labels in self.val_loader:
             images = Variable(img, requires_grad=False).cuda(self.cuda_device)
-            out = self.net(images).cpu().data.numpy().reshape(1024, 1024)
+            out = self.net(images).cpu().data.numpy().reshape(512, 512)
             if op < 2:
                 out = cv2.flip(out, op)
             pred[cnt] += out.flatten()
@@ -213,7 +213,7 @@ class Training():
         img_names = [name.split('_')[0] for name in test_dataset.img_names]
         for i, img in enumerate(test_loader):
             img = Variable(img, requires_grad=False).cuda(self.cuda_device)
-            prob = self.net(img).cpu().data.numpy().reshape((256,256))
+            prob = self.net(img).cpu().data.numpy().reshape((512,512))
             prob *= 255
             prob[np.where(prob >= thresh*255)] = 255
             prob[np.where(prob < thresh*255)] = 0
