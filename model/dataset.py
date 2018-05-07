@@ -10,12 +10,18 @@ from torch.utils.data import DataLoader
 
 class Melanoma(Dataset):
 
-	def __init__(self, data_path, transforms=None, is_train=True):
+	def __init__(self, data_path, test_path, transforms=None, is_train=True, is_test=False):
 		
 		self.transforms = transforms
+		self.is_test = is_test
 
-		img_folder = np.array(sorted(glob.glob(data_path + 'image/*'))[:10])
-		label_folder = np.array(sorted(glob.glob(data_path + 'label/*'))[:10])
+		img_folder = np.array(sorted(glob.glob(data_path + 'image/*')))
+		label_folder = np.array(sorted(glob.glob(data_path + 'label/*')))
+		test_folder = np.array(sorted(glob.glob(test_path + 'image/*')))
+		if is_test:
+			self.img_names = [f for f in os.listdir(self.test_folder) if (os.path.isfile(os.path.join(self.test_folder, f)))]
+
+
 
 		n_total = len(img_folder)
 
@@ -27,6 +33,8 @@ class Melanoma(Dataset):
 		if is_train:
 			self.imgs = img_folder[train_idx]
 			self.labels = label_folder[train_idx]
+		elif is_test:
+			self.imgs = test_folder
 		else:
 			self.imgs = img_folder[val_idx]
 			self.labels = label_folder[val_idx]
@@ -37,17 +45,20 @@ class Melanoma(Dataset):
 # mean is [0.37666158 0.33505249 0.32253156]
 
 	def __getitem__(self, index):
+
+		if self.is_test:
+			img = Image.open(self.imgs[index])
+		else:
+			img = Image.open(self.imgs[index])
+			label = np.array(Image.open(self.labels[index]))
+			
+			label[label > 128] = 255 
+			label[label <= 128] = 0
+			label = label / 255 
+			# label = np.transpose(label, (2,0,1))
 		
-		img = Image.open(self.imgs[index])
-		label = np.array(Image.open(self.labels[index]))
-		
-		label[label > 128] = 255 
-		label[label <= 128] = 0
-		label = label / 255 
-		# label = np.transpose(label, (2,0,1))
-		
-		if self.transforms is not None:
-			img = self.transforms(img)
+			if self.transforms is not None:
+				img = self.transforms(img)
 
 		return(img, label)
 

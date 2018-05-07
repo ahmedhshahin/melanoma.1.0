@@ -39,36 +39,47 @@ class Training():
         self.overfit_mode = overfit_mode
         self.data_parallel = data_parallel
         self.data_parallel_flag = True
-        if not test_mode:
-            self.optimizer = torch.optim.Adam(self.net.parameters(), lr=initial_lr)
-            self.batch_size_train = batch_size_train
-            self.batch_size_val = batch_size_val
-            train_params = dataset_params
-            train_params['is_train'] = True
-            self.n = 12452/2
-            #idx = np.arange(self.n)
-            #np.random.shuffle(idx)
-            idx = np.load('idx.npy')
-            m = int(0.75*self.n)
-            if self.overfit_mode:
-                m = 100
-            train_params['idx'] = idx[:m]
-            train_dataset = dataset(**train_params)
-            self.train_loader = torch.utils.data.DataLoader(dataset=train_dataset, 
-                                                   batch_size=batch_size_train,
-                                                   shuffle=True)
-            if not self.overfit_mode:
-                val_params = dataset_params
-                val_params['is_train'] = False
-                train_params['idx'] = idx[m:]
-                val_dataset = dataset(**val_params)
-                self.val_loader = torch.utils.data.DataLoader(dataset=val_dataset, 
-                                                           batch_size=batch_size_val,
-                                                           shuffle=False)
-            self.train_loss_hist = []
-            self.val_loss_hist = []
-            
-            self.best_val = 0.0
+        
+
+        # if not test_mode:
+        #     self.optimizer = torch.optim.Adam(self.net.parameters(), lr=initial_lr)
+        #     self.batch_size_train = batch_size_train
+        #     self.batch_size_val = batch_size_val
+        #     train_params = dataset_params
+        #     train_params['is_train'] = True
+        #     self.n = 12452/2
+        #     #idx = np.arange(self.n)
+        #     #np.random.shuffle(idx)
+        #     idx = np.load('idx.npy')
+        #     m = int(0.75*self.n)
+        #     if self.overfit_mode:
+        #         m = 100
+        #     train_params['idx'] = idx[:m]
+        #     train_dataset = dataset(**train_params)
+        #     self.train_loader = torch.utils.data.DataLoader(dataset=train_dataset, 
+        #                                            batch_size=batch_size_train,
+        #                                            shuffle=True)
+        #     if not self.overfit_mode:
+        #         val_params = dataset_params
+        #         val_params['is_train'] = False
+        #         train_params['idx'] = idx[m:]
+        #         val_dataset = dataset(**val_params)
+        #         self.val_loader = torch.utils.data.DataLoader(dataset=val_dataset, 
+        #                                                    batch_size=batch_size_val,
+        #                                                    shuffle=False)
+        self.optimizer = torch.optim.Adam(self.net.parameters(), lr=initial_lr)
+        self.batch_size_train = batch_size_train
+        self.batch_size_val = batch_size_val
+        dataset = dataset(**train_params)
+        self.train_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size_train, shuffle=True, is_train=True)
+        self.val_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size_val, shuffle=False, is_train=False)
+        self.test_loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, is_train=False, is_test=True)
+
+
+        self.train_loss_hist = []
+        self.val_loss_hist = []
+        
+        self.best_val = 0.0
        
     def train_model(self, n_epochs):
         if self.data_parallel and not self.data_parallel_flag:
@@ -149,7 +160,8 @@ class Training():
             pred[cnt] = self.net(images).cpu().data.numpy().flatten()
             y[cnt] = labels.cpu().numpy().astype(np.uint8).flatten()
             cnt += 1
-        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
+        # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
+        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
         return mean_loss
 
     def val_batches_with_aug(self):
@@ -173,7 +185,8 @@ class Training():
                 cnt += 1
                 op = -1
         pred /= 4
-        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
+        # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
+        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
         return mean_loss
         
     def predict_test(self, data_dir, save_dir, thresh, batch_size = 1):
@@ -181,22 +194,21 @@ class Training():
         test_params = self.dataset_params
         test_params['is_train'] = False
         test_params['is_test'] = True
-        test_params['data_dir'] = data_dir
-        test_params['idx'] = None
+        # test_params['data_dir'] = data_dir
+        # test_params['idx'] = None
         test_dataset = self.dataset(**test_params)
-        test_loader = torch.utils.data.DataLoader(dataset=test_dataset, 
-                                                   batch_size=batch_size,
-                                                   shuffle=False)
+        test_loader = self.test_loader
         img_names = [name.split('_')[0] for name in test_dataset.img_names]
         for i, img in enumerate(test_loader):
             img = Variable(img, requires_grad=False).cuda(self.cuda_device)
-            prob = self.net(img).cpu().data.numpy().reshape((1024,1024))
+            prob = self.net(img).cpu().data.numpy().reshape((256,256))
             prob *= 255
             prob[np.where(prob >= thresh*255)] = 255
             prob[np.where(prob < thresh*255)] = 0
             prob = prob.astype(np.uint8)
-            msk = np.zeros((prob.shape[0], prob.shape[1], 3), dtype = np.uint8)
-            msk[:,:,0] = msk[:,:,1] = msk[:,:,2] = prob
+            # msk = np.zeros((prob.shape[0], prob.shape[1], 3), dtype = np.uint8)
+            # msk[:,:,0] = msk[:,:,1] = msk[:,:,2] = prob
+            msk = prob
             cv2.imwrite(os.path.join(save_dir, img_names[i]+'_mask.png'), msk)
         
     def modify_lr(self, new_lr):
