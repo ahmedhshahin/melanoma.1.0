@@ -45,9 +45,9 @@ class Training():
         #     self.optimizer = torch.optim.Adam(self.net.parameters(), lr=initial_lr)
         #     self.batch_size_train = batch_size_train
         #     self.batch_size_val = batch_size_val
-        train_params = dataset_params
-        val_params = dataset_params
-        test_params = dataset_params
+        train_params = dataset_params.copy()
+        val_params = dataset_params.copy()
+        test_params = dataset_params.copy()
         val_params['is_train'] = False
         test_params['is_test'] = True
         #     train_params['is_train'] = True
