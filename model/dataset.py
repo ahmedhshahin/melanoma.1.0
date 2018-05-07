@@ -1,7 +1,6 @@
 from torchvision import transforms
 from torch.utils.data.dataset import Dataset
 import numpy as np
-import imageio
 import glob
 import matplotlib.pyplot as plt
 from scipy import misc
