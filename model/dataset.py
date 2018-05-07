@@ -49,6 +49,8 @@ class Melanoma(Dataset):
 
 		if self.is_test:
 			img = Image.open(self.imgs[index])
+			t = transforms.Compose([transforms.ToTensor()])
+			img = t[img]
 			label = None
 		else:
 			img = Image.open(self.imgs[index])
@@ -68,11 +70,11 @@ class Melanoma(Dataset):
 		return self.N
 
 
-# if __name__ == '__main__':
-#     transformations = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.51892472, 0.4431646,  0.40640972], [0.37666158, 0.33505249, 0.32253156])])
-#     dset_train = melanomaData('/home/ahmed/github/melanoma.1.0/dataset/2016data/train/', transformations, is_train=True)
-#     dset_val = melanomaData('/home/ahmed/github/melanoma.1.0/dataset/2016data/train/', transformations, is_train=False)
-#     train_dloader = DataLoader(dset_train, batch_size=4, shuffle=True, num_workers=4)
-#     val_dloader = DataLoader(dset_val, batch_size=1, shuffle=True, num_workers=4)
+if __name__ == '__main__':
+    transformations = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.51892472, 0.4431646,  0.40640972], [0.37666158, 0.33505249, 0.32253156])])
+    dset_train = melanomaData('/home/ahmed/github/melanoma.1.0/dataset/2016data/train/', transformations, is_train=True)
+    dset_val = melanomaData('/home/ahmed/github/melanoma.1.0/dataset/2016data/train/', transformations, is_train=False)
+    train_dloader = DataLoader(dset_train, batch_size=4, shuffle=True, num_workers=4)
+    val_dloader = DataLoader(dset_val, batch_size=1, shuffle=True, num_workers=4)
 
-    
+ 
