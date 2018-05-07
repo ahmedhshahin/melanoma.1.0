@@ -83,11 +83,11 @@ class Training():
         self.dataset_val = dataset(**val_params)
         self.dataset_test = dataset(**test_params)
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
-        for x,y in self.train_loader:
+        self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
+        for x,y in self.val_loader:
             print(x.size())
             print(y.size())
             break
-        self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
         self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
 
 
