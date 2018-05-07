@@ -30,8 +30,8 @@ class Training():
         self.net = nn.DataParallel(self.net)
         self.criterion = criterion
         self.val_metric = val_metric
-        # self.cuda_device = cuda_device
-        # self.net.cuda(self.cuda_device)
+        self.cuda_device = cuda_device
+        self.net.cuda(self.cuda_device)
         self.dataset_params = dataset_params
         self.dataset = dataset
         self.test_mode = test_mode
