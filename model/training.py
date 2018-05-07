@@ -125,7 +125,6 @@ class Training():
             # Forward + Backward + Optimize
             self.optimizer.zero_grad()  # zero the gradient buffer
             out5 = self.net(images)
-            print(out5.size())
             #aux_loss = self.criterion(out1, labels) + self.criterion(out2, labels) + self.criterion(out3, labels) + self.criterion(out4, labels)
             final_layer_loss = self.criterion(out5, labels)
             count += 1
@@ -170,6 +169,7 @@ class Training():
         cnt = 0
         for images, labels in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
+            print("IMAGES {0}".format(images.size()))
             pred[cnt] = self.net(images).cpu().data.numpy().flatten()
             y[cnt] = labels.cpu().numpy().astype(np.uint8).flatten()
             cnt += 1
