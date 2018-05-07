@@ -79,6 +79,7 @@ class Training():
         dataset_val = dataset(**val_params)
         dataset_test = dataset(**test_params)
         self.train_loader = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size_train, shuffle=True)
+        print(self.train_loader.__len__())
         self.val_loader = torch.utils.data.DataLoader(dataset_val, batch_size=batch_size_val, shuffle=False)
         self.test_loader = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuffle=False)
 
@@ -103,7 +104,7 @@ class Training():
             if self.best_val < np.max(v_loss):
                 self.best_val = np.max(v_loss)
                 self.save_checkpoint(e, self.best_val)
-                print 'saved'
+                print('saved')
             t2 = time()
             print e, (t2-t1)/60.0, t_loss, v_loss 
     
