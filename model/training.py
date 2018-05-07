@@ -163,9 +163,9 @@ class Training():
     def val_batches(self):
         self.net.eval()
         # Test the Model
-        m = self.n - int(self.n*0.75)
-        pred = np.zeros((m, 1024 * 1024))
-        y = np.zeros((m, 1024 * 1024), dtype = np.uint8)
+        # m = self.n - int(self.n*0.75)
+        pred = np.zeros((dataset_val.__len__(), 256 * 256))
+        y = np.zeros((dataset_val.__len__(), 256 * 256), dtype = np.uint8)
         cnt = 0
         for images, labels in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
@@ -179,9 +179,9 @@ class Training():
     def val_batches_with_aug(self):
         self.net.eval()
         # Test the Model
-        m = self.n - int(self.n*0.75)
-        pred = np.zeros((m, 1024 * 1024))
-        y = np.zeros((m, 1024 * 1024), dtype = np.uint8)
+        # m = self.n - int(self.n*0.75)
+        pred = np.zeros((dataset_val.__len__(), 256 * 256))
+        y = np.zeros((dataset_val.__len__(), 256 * 256), dtype = np.uint8)
         cnt = 0
         op = -1
         for img, labels in self.val_loader:
