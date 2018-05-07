@@ -170,7 +170,7 @@ class Training():
         for images, labels in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
             x = self.net(images).cpu().data.numpy()
-            print x.size()
+            print x.shape
             pred[cnt] = x.flatten()
             y[cnt] = labels.cpu().numpy().astype(np.uint8).flatten()
             cnt += 1
