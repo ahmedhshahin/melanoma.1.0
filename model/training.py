@@ -79,8 +79,8 @@ class Training():
         transformations = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.51892472, 0.4431646,  0.40640972], [0.37666158, 0.33505249, 0.32253156])])
 
 
-        dataset_train = dataset(**train_params)
-        dataset_val = dataset(**val_params)
+        self.dataset_train = dataset(**train_params)
+        self.dataset_val = dataset(**val_params)
         dataset_test = dataset(**test_params)
         self.train_loader = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size_train, shuffle=True)
         self.val_loader = torch.utils.data.DataLoader(dataset_val, batch_size=batch_size_val, shuffle=False)
@@ -164,8 +164,8 @@ class Training():
         self.net.eval()
         # Test the Model
         # m = self.n - int(self.n*0.75)
-        pred = np.zeros((dataset_val.__len__(), 256 * 256))
-        y = np.zeros((dataset_val.__len__(), 256 * 256), dtype = np.uint8)
+        pred = np.zeros((self.dataset_val.__len__(), 256 * 256))
+        y = np.zeros((self.dataset_val.__len__(), 256 * 256), dtype = np.uint8)
         cnt = 0
         for images, labels in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
@@ -180,8 +180,8 @@ class Training():
         self.net.eval()
         # Test the Model
         # m = self.n - int(self.n*0.75)
-        pred = np.zeros((dataset_val.__len__(), 256 * 256))
-        y = np.zeros((dataset_val.__len__(), 256 * 256), dtype = np.uint8)
+        pred = np.zeros((self.dataset_val.__len__(), 256 * 256))
+        y = np.zeros((self.dataset_val.__len__(), 256 * 256), dtype = np.uint8)
         cnt = 0
         op = -1
         for img, labels in self.val_loader:
