@@ -50,6 +50,7 @@ class Training():
         test_params = dataset_params.copy()
         val_params['is_train'] = False
         test_params['is_test'] = True
+        test_params['is_train'] = False
         #     train_params['is_train'] = True
         #     self.n = 12452/2
         #     #idx = np.arange(self.n)
@@ -81,7 +82,7 @@ class Training():
         dataset_train = dataset(**train_params)
         dataset_val = dataset(**val_params)
         dataset_test = dataset(**test_params)
-        print(test_params)
+        print(dataset_train.__len__())
         print(dataset_val.__len__())
         print(dataset_test.__len__())
         self.train_loader = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size_train, shuffle=True)
