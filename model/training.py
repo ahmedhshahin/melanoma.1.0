@@ -91,23 +91,7 @@ class Training():
         self.val_loss_hist = []
         
         self.best_val = 0.0
-    def val_batches(self):
-        self.net.eval()
-        # Test the Model
-        # m = self.n - int(self.n*0.75)
-        pred = np.zeros((self.dataset_val.__len__(), 512 * 512))
-        y = np.zeros((self.dataset_val.__len__(), 512 * 512), dtype = np.uint8)
-        cnt = 0
-        for images, labels in self.val_loader:
-            images = Variable(images, requires_grad=False).cuda(self.cuda_device)
-            print("IMAGES {0}".format(images.size()))
-            pred[cnt] = self.net(images).cpu().data.numpy().flatten()
-            y[cnt] = labels.cpu().numpy().astype(np.uint8).flatten()
-            cnt += 1
-        # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
-        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
-        return mean_loss[0]
-       
+        t = self.val_batches()
     def train_model(self, n_epochs):
         if self.data_parallel and not self.data_parallel_flag:
             self.net = nn.DataParallel(self.net)
@@ -176,6 +160,22 @@ class Training():
                 count = 0
         return epoch_loss/(i+1)
     
+    def val_batches(self):
+        self.net.eval()
+        # Test the Model
+        # m = self.n - int(self.n*0.75)
+        pred = np.zeros((self.dataset_val.__len__(), 512 * 512))
+        y = np.zeros((self.dataset_val.__len__(), 512 * 512), dtype = np.uint8)
+        cnt = 0
+        for images, labels in self.val_loader:
+            images = Variable(images, requires_grad=False).cuda(self.cuda_device)
+            print("IMAGES {0}".format(images.size()))
+            pred[cnt] = self.net(images).cpu().data.numpy().flatten()
+            y[cnt] = labels.cpu().numpy().astype(np.uint8).flatten()
+            cnt += 1
+        # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
+        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
+        return mean_loss[0]
 
     def val_batches_with_aug(self):
         self.net.eval()
