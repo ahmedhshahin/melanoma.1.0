@@ -46,6 +46,10 @@ class Training():
         #     self.batch_size_train = batch_size_train
         #     self.batch_size_val = batch_size_val
         train_params = dataset_params
+        val_params = dataset_params
+        val_params['is_train'] = False
+        test_params = val_params
+        test_params['is_test'] = True
         #     train_params['is_train'] = True
         #     self.n = 12452/2
         #     #idx = np.arange(self.n)
@@ -70,10 +74,13 @@ class Training():
         self.optimizer = torch.optim.Adam(self.net.parameters(), lr=initial_lr)
         self.batch_size_train = batch_size_train
         self.batch_size_val = batch_size_val
-        dataset = dataset(**train_params)
-        self.train_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size_train, shuffle=True, is_train=True)
-        self.val_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size_val, shuffle=False, is_train=False)
-        self.test_loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, is_train=False, is_test=True)
+
+        dataset_train = dataset(**train_params)
+        dataset_val = dataset(**val_params)
+        dataset_test = dataset(**test_params)
+        self.train_loader = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size_train, shuffle=True)
+        self.val_loader = torch.utils.data.DataLoader(dataset_val, batch_size=batch_size_val, shuffle=False)
+        self.test_loader = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuffle=False)
 
 
         self.train_loss_hist = []
@@ -191,12 +198,12 @@ class Training():
         
     def predict_test(self, data_dir, save_dir, thresh, batch_size = 1):
         self.net.eval()
-        test_params = self.dataset_params
-        test_params['is_train'] = False
-        test_params['is_test'] = True
+        # test_params = self.dataset_params
+        # test_params['is_train'] = False
+        # test_params['is_test'] = True
         # test_params['data_dir'] = data_dir
         # test_params['idx'] = None
-        test_dataset = self.dataset(**test_params)
+        # test_dataset = self.dataset(**test_params)
         test_loader = self.test_loader
         img_names = [name.split('_')[0] for name in test_dataset.img_names]
         for i, img in enumerate(test_loader):
