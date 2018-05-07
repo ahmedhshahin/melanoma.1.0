@@ -46,6 +46,7 @@ class Training():
         #     self.batch_size_train = batch_size_train
         #     self.batch_size_val = batch_size_val
         train_params = dataset_params
+        print(train_params)
         val_params = dataset_params
         val_params['is_train'] = False
         test_params = val_params
