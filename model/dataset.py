@@ -49,8 +49,7 @@ class Melanoma(Dataset):
 
 		if self.is_test:
 			img = Image.open(self.imgs[index])
-			t = transforms.Compose([transforms.ToTensor()])
-			img = t[img]
+			print("AAAAAAAAAAAAAAAAAAAAAAAA")
 			label = None
 		else:
 			img = Image.open(self.imgs[index])
