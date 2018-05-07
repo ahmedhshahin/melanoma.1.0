@@ -83,7 +83,7 @@ class Training():
         self.dataset_val = dataset(**val_params)
         self.dataset_test = dataset(**test_params)
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
-        for x,y in train_loader:
+        for x,y in self.train_loader:
             print(x.size())
             print(y.size())
             break
