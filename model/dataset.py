@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy import misc
 from PIL import Image
 from torch.utils.data import DataLoader
+import os
 
 class Melanoma(Dataset):
 
