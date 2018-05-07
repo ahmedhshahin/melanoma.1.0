@@ -125,6 +125,7 @@ class Training():
             # Forward + Backward + Optimize
             self.optimizer.zero_grad()  # zero the gradient buffer
             out5 = self.net(images)
+            print(out5.size())
             #aux_loss = self.criterion(out1, labels) + self.criterion(out2, labels) + self.criterion(out3, labels) + self.criterion(out4, labels)
             final_layer_loss = self.criterion(out5, labels)
             count += 1
