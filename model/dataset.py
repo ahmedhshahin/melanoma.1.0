@@ -49,6 +49,7 @@ class Melanoma(Dataset):
 
 		if self.is_test:
 			img = Image.open(self.imgs[index])
+			label = None
 		else:
 			img = Image.open(self.imgs[index])
 			label = np.array(Image.open(self.labels[index]))
