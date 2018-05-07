@@ -30,8 +30,8 @@ class Training():
         self.net = nn.DataParallel(self.net)
         self.criterion = criterion
         self.val_metric = val_metric
-        self.cuda_device = cuda_device
-        self.net.cuda(self.cuda_device)
+        # self.cuda_device = cuda_device
+        # self.net.cuda(self.cuda_device)
         self.dataset_params = dataset_params
         self.dataset = dataset
         self.test_mode = test_mode
@@ -84,10 +84,6 @@ class Training():
         self.dataset_test = dataset(**test_params)
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
         self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
-        for x,y in self.val_loader:
-            print(x.size())
-            print(y.size())
-            break
         self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
 
 
@@ -114,7 +110,7 @@ class Training():
                 self.save_checkpoint(e, self.best_val)
                 print('saved')
             t2 = time()
-            print e, (t2-t1)/60.0, t_loss, v_loss 
+            print(e, (t2-t1)/60.0, t_loss, v_loss) 
     
     def train_batches(self):
         self.net.train()

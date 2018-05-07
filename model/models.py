@@ -83,8 +83,13 @@ class FullResulotionNet(nn.Module):
     def forward(self, x):
         x = self.conv(x)
         x_pool = self.max_pool(x)
+        print(x_pool.size())
         out10 = self.wfov_1_10(x_pool)
+        print(out10.size())
         out10 = self.upsample(out10)
+        print(out10.size())
         out11 = torch.cat([x, out10], dim = 1)
+        print(out11.size())
         pred = self.classif(out11)
+        print(pred.size())
         return pred
