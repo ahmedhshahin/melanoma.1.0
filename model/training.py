@@ -201,7 +201,7 @@ class Training():
         mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
         return mean_loss
         
-    def predict_test(self, data_dir, save_dir, thresh, batch_size = 1):
+    def predict_test(self, save_dir, thresh, batch_size = 1):
         self.net.eval()
         # test_params = self.dataset_params
         # test_params['is_train'] = False

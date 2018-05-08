@@ -2,6 +2,8 @@ import torch
 from torch.autograd import Function
 from itertools import repeat
 import numpy as np
+from sklearn.utils import class_weight
+
 
 def val_metric(y, p, thresh):
     pred = np.zeros(p.shape, dtype = np.uint8)
@@ -21,6 +23,7 @@ def soft_dice_loss(inputs, targets):
     num = targets.size(0)
     m1  = inputs.view(num,-1).float()
     m2  = targets.view(num,-1).float()
+    # weights = class_weight.compute_class_weight('balanced', np.unique(targets), targets)
     intersection = (m1 * m2)
     eps = 1e-8
     score = 2. * (intersection.sum(1) + eps) / (m1.sum(1) + m2.sum(1) + eps)
