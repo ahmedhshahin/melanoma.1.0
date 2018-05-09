@@ -162,20 +162,16 @@ class Training():
         y = []
         orgn_size = np.zeros((self.val_loader.dataset.__len__(), 1, 2))
         cnt = 0
-        for i, (images, labels, size) in enumerate(self.val_loader):
+        for images, labels, size in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
             pred[cnt:cnt+images.size(0)] = self.net(images).cpu().data.numpy()#.reshape(4, -1)
             # y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8)#.reshape(4, -1)
             y.append(labels.cpu().numpy().astype(np.uint8))
-            # orgn_size[i] = size
-            print(size)
+            orgn_size.append(size)
             cnt += images.size(0)
-        print(orgn_size)
-        # pred_orgn_size = []
-        # label_orgn_size = []
         score = 0.0
+        print(len(orgn_size))
         for p in range(pred.shape[0]):
-            print(len(orgn_size))
             img = rev_padding(pred[p][0], orgn_size[p])
             temp = np.zeros(img.shape)
             temp[img >= 0.5] = 1
