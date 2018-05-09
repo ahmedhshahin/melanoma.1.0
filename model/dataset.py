@@ -15,6 +15,7 @@ class Melanoma(Dataset):
 		
 		self.transforms = transforms
 		self.is_test = is_test
+		self.is_train = is_train
 
 		img_folder = np.array(sorted(glob.glob(data_path + '/*.jpg')))
 		label_folder = np.array(sorted(glob.glob(data_path + '/*.png')))
@@ -51,7 +52,7 @@ class Melanoma(Dataset):
 
 		if self.is_test:
 			img = misc.imread(self.imgs[index])
-			# img = 
+			img = padding(img, 512)
 			label = None
 		else:
 			img = Image.open(self.imgs[index])
@@ -59,9 +60,10 @@ class Melanoma(Dataset):
 			label = np.array(Image.open(self.labels[index]))
 			label = padding(label, 512)
 			
-			label[label > 128] = 255 
-			label[label <= 128] = 0
+			label[label >= 128] = 255 
+			label[label < 128] = 0
 			label = label / 255 
+
 			# label = np.transpose(label, (2,0,1))
 		
 			if self.transforms is not None:
@@ -76,10 +78,10 @@ class Melanoma(Dataset):
 if __name__ == '__main__':
     transformations = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.51892472, 0.4431646,  0.40640972], [0.37666158, 0.33505249, 0.32253156])])
     dset_train = Melanoma('/home/ahmed/melanoma_data/train_img_label16/', '/home/ahmed/melanoma_data/2016 Test/', transformations, is_train=True)
-    # dset_val = Melanoma('/home/ahmed/github/melanoma.1.0/dataset/2016data/train/', 'home/ahmed/Desktop/',transformations, is_train=False)
+    dset_val = Melanoma('/home/ahmed/melanoma_data/train_img_label16/', 'home/ahmed/Desktop/',transformations, is_train=False)
     train_dloader = DataLoader(dset_train, batch_size=4, shuffle=True, num_workers=4)
-    # val_dloader = DataLoader(dset_val, batch_size=1, shuffle=True, num_workers=4)
-    for img, label in train_dloader:
+    val_dloader = DataLoader(dset_val, batch_size=1, shuffle=True, num_workers=4)
+    for img, label in val_dloader:
     	i = np.transpose(img[0], (1,2,0))
     	print(i.shape)
     	print(label[0].shape)

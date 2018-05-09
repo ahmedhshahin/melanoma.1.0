@@ -23,6 +23,7 @@ from sklearn.metrics.pairwise import pairwise_distances
 from numpy.linalg import inv, norm
 import cv2
 from time import time
+from utils import *
 
 class Training():
     def __init__(self, model, model_params, criterion, val_metric, initial_lr, dataset, dataset_params, batch_size_train, train_steps_before_update, batch_size_val, cuda_device, test_mode = False, overfit_mode = False, data_parallel = False):
@@ -82,6 +83,7 @@ class Training():
         self.dataset_train = dataset(**train_params)
         self.dataset_val = dataset(**val_params)
         self.dataset_test = dataset(**test_params)
+
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
         self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
         self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
@@ -142,17 +144,28 @@ class Training():
         self.net.eval()
         # Test the Model
         # m = self.n - int(self.n*0.75)
-        pred = np.zeros((self.dataset_val.__len__(), 256 * 256))
-        y = np.zeros((self.dataset_val.__len__(), 256 * 256), dtype = np.uint8)
+        pred = np.zeros((self.dataset_val.__len__(), 512 , 512))
+        y = np.zeros((self.dataset_val.__len__(), 512 , 512), dtype = np.uint8)
         cnt = 0
         for images, labels in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
-            pred[cnt:cnt+4] = self.net(images).cpu().data.numpy().reshape(4, -1)
-            y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8).reshape(4, -1)
+            pred[cnt:cnt+4] = self.net(images).cpu().data.numpy()#.reshape(4, -1)
+            y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8)#.reshape(4, -1)
             cnt += 4
+        # pred_orgn_size = []
+        # label_orgn_size = []
+        score = 0.0
+        for p in range(pred.shape[0]):
+            img = rev_padding(pred[p])
+            temp = np.zeros(img.shape)
+            temp[img >= 0.5] = 1
+            label = rev_padding(y[p])
+            score += calc_jaccard(temp, label)
+        mean_loss = score / pred.shape[0]
+
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
-        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
-        return mean_loss[0]
+        # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
+        return mean_loss
         
     def predict_test(self, save_dir, thresh, batch_size = 1):
         self.net.eval()
