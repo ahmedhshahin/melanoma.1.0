@@ -14,4 +14,4 @@ transformations = transforms.Compose([transforms.ToTensor(), transforms.Normaliz
 train_object = Training(model = FullResulotionNet, model_params = {'in_channels': 3, 'n_outputs': 1, 'n_filters' : 128}, criterion = soft_dice_loss, val_metric = val_metric, initial_lr = 2e-5, dataset = Melanoma, dataset_params = {'data_path': '/content/melanoma.1.0/dataset/overfit/', 'test_path' : '/content/melanoma.1.0/dataset/2016data/test/', 'transforms' : transformations, 'is_train' : True, 'is_test' : False}, batch_size_train = 1, train_steps_before_update = 4, batch_size_val = 1, cuda_device = 0, data_parallel = False, test_mode = False, overfit_mode = True)
 
 train_object.train_model(100)
-train_object.predict_test(save_dir = '/content/melanoma.1.0/dataset/2016data/test/', 0.5)
+train_object.predict_test(save_dir = '/content/melanoma.1.0/dataset/2016data/test/', thresh=0.5)
