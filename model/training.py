@@ -99,7 +99,7 @@ class Training():
         self.val_loss_hist = []
         
         self.best_val = 0.0
-        t = self.val_batches()
+        # t = self.val_batches()
     def train_model(self, n_epochs):
         if self.data_parallel and not self.data_parallel_flag:
             self.net = nn.DataParallel(self.net)
