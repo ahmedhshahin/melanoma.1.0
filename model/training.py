@@ -171,7 +171,7 @@ class Training():
             cnt += images.size(0)
         print(pred.mean())
         print(pred.min())
-        print(pred.mix())
+        print(pred.max())
         score = 0.0
         for p in range(pred.shape[0]):
             img = rev_padding(pred[p][0], orgn_size[p])
