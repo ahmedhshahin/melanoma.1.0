@@ -167,7 +167,8 @@ class Training():
             pred[cnt:cnt+images.size(0)] = self.net(images).cpu().data.numpy()#.reshape(4, -1)
             # y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8)#.reshape(4, -1)
             y.append(labels.cpu().numpy().astype(np.uint8))
-            orgn_size[i] = size
+            # orgn_size[i] = size
+            print(size)
             cnt += images.size(0)
         print(orgn_size)
         # pred_orgn_size = []
