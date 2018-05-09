@@ -61,9 +61,8 @@ class Melanoma(Dataset):
 			label = np.array(Image.open(self.labels[index]))
 			label = padding(label, 512)
 			
-			label[label >= 128] = 255 
 			label[label < 128] = 0
-			label = label / 255 
+			label[label >= 128] = 1 
 
 			# label = np.transpose(label, (2,0,1))
 		
