@@ -151,7 +151,8 @@ class Training():
         self.net.eval()
         # Test the Model
         # m = self.n - int(self.n*0.75)
-        pred = np.zeros((self.dataset_val.__len__(), 512 , 512))
+        # pred = np.zeros((self.dataset_val.__len__(), 512 , 512))
+        pred = np.zeros((self.val_loader.dataset.__len__(), 512 , 512))
         # y = np.zeros((self.dataset_val.__len__(), 512 , 512), dtype = np.uint8)
         y = []
         orgn_size = []
