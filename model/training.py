@@ -84,7 +84,8 @@ class Training():
         self.dataset_test = dataset(**test_params)
 
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
-        self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
+        # self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
+        self.val_loader = self.train_loader
         self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
         # for x, y, _ in self.train_loader:
         #     print(x.shape)
@@ -111,14 +112,14 @@ class Training():
             self.train_loss_hist.append(t_loss)
             if self.overfit_mode:
                 return t_loss
-            # # v_loss = self.val_batches()
-            # self.val_loss_hist.append(v_loss)
-            # if self.best_val < np.max(v_loss):
-            #     self.best_val = np.max(v_loss)
-            #     self.save_checkpoint(e, self.best_val)
-            #     print('saved')
+            v_loss = self.val_batches()
+            self.val_loss_hist.append(v_loss)
+            if self.best_val < np.max(v_loss):
+                self.best_val = np.max(v_loss)
+                self.save_checkpoint(e, self.best_val)
+                print('saved')
             t2 = time()
-            print(e, (t2-t1)/60.0, t_loss) #v_loss) 
+            print(e, (t2-t1)/60.0, t_loss, v_loss) 
     
     def train_batches(self):
         self.net.train()
