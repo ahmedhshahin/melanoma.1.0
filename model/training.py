@@ -90,6 +90,7 @@ class Training():
 
         if self.overfit_mode:
             self.val_loader = self.train_loader
+            self.test_loader = self.train_loader
 
         # for x, y, _ in self.train_loader:
         #     print(x.shape)
@@ -166,6 +167,7 @@ class Training():
             pred[cnt:cnt+images.size(0)] = self.net(images).cpu().data.numpy()#.reshape(4, -1)
             # y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8)#.reshape(4, -1)
             y.append(labels.cpu().numpy().astype(np.uint8))
+            print(size)
             orgn_size.append(size)
             cnt += images.size(0)
         # pred_orgn_size = []

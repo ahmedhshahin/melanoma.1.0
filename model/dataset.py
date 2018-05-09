@@ -53,13 +53,11 @@ class Melanoma(Dataset):
 		if self.is_test:
 			img = misc.imread(self.imgs[index])
 			img = padding(img, 512)
-			label = None
+			return (img)
 		else:
 			img = Image.open(self.imgs[index])
 			w, h = img.size
 			orgn_size = [h, w]
-			print(self.imgs[index])
-			print(orgn_size)
 			img = padding(img, 512)
 			label = np.array(Image.open(self.labels[index]))
 			label = padding(label, 512)
