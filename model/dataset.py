@@ -58,6 +58,8 @@ class Melanoma(Dataset):
 			img = Image.open(self.imgs[index])
 			w, h = img.size
 			orgn_size = [h, w]
+			print(self.imgs[index])
+			print(orgn_size)
 			img = padding(img, 512)
 			label = np.array(Image.open(self.labels[index]))
 			label = padding(label, 512)
