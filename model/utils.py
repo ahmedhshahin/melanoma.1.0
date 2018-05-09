@@ -95,6 +95,7 @@ def rev_padding(img, orgn_size):
         if ratio < 1.35:
             new_b = int(math.ceil(b * (1.35/ratio)))
             if (new_b % 2 == 1): new_b += 1
+            print(img.shape)
             img_sq = misc.imresize(img, (new_b, new_b, 3))
             output = img_sq[(new_b-a)//2:(new_b+a)//2, :, :]
             origin = output[:, (new_b-b)//2:(new_b+b)//2, :]
