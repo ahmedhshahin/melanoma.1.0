@@ -89,6 +89,7 @@ def rev_padding(img, orgn_size):
     a, b = orgn_size[:2]
     # i, j = img.shape[:2]
     # img = img[0, ...]
+    print(a)
     a = a.item()
     b = b.item()
     ratio = b * 1.0 / a
