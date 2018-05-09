@@ -88,7 +88,7 @@ def padding(img, new_dim):
 def rev_padding(img, orgn_size):
     a, b = orgn_size[:2]
     # i, j = img.shape[:2]
-    img = img[0, ...]
+    # img = img[0, ...]
     print(img.shape)
     a = a.item()
     b = b.item()
