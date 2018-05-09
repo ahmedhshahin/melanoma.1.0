@@ -169,8 +169,10 @@ class Training():
             y.append(labels.cpu().numpy().astype(np.uint8))
             orgn_size.append(size)
             cnt += images.size(0)
+        print(pred.mean())
+        print(pred.min())
+        print(pred.mix())
         score = 0.0
-        print(len(orgn_size))
         for p in range(pred.shape[0]):
             img = rev_padding(pred[p][0], orgn_size[p])
             temp = np.zeros(img.shape)
