@@ -176,7 +176,7 @@ class Training():
         for thresh in [0.5]:
             score = 0.0
             for p in range(pred.shape[0]):
-                img = rev_padding(pred[p][0], orgn_size[p]) / 255
+                img = rev_padding(pred[p][0], orgn_size[p]) / 255.0
                 print(img.mean())
                 print(img.min())
                 print(img.max())
