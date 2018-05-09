@@ -135,7 +135,7 @@ class Training():
             out5 = self.net(images)
             #aux_loss = self.criterion(out1, labels) + self.criterion(out2, labels) + self.criterion(out3, labels) + self.criterion(out4, labels)
             final_layer_loss = self.criterion(out5, labels)
-            t_acc = calc_jaccard((out5 > 0.5), labels)
+            t_acc = calc_jaccard((out5[:, 0, :, :] > 0.5), labels)
             count += 1
             loss = final_layer_loss / self.max_count
             loss.backward()
