@@ -111,14 +111,14 @@ class Training():
             self.train_loss_hist.append(t_loss)
             if self.overfit_mode:
                 return t_loss
-            v_loss = self.val_batches()
-            self.val_loss_hist.append(v_loss)
-            if self.best_val < np.max(v_loss):
-                self.best_val = np.max(v_loss)
-                self.save_checkpoint(e, self.best_val)
-                print('saved')
+            # # v_loss = self.val_batches()
+            # self.val_loss_hist.append(v_loss)
+            # if self.best_val < np.max(v_loss):
+            #     self.best_val = np.max(v_loss)
+            #     self.save_checkpoint(e, self.best_val)
+            #     print('saved')
             t2 = time()
-            print(e, (t2-t1)/60.0, t_loss, t_acc, v_loss) 
+            print(e, (t2-t1)/60.0, t_loss, t_acc) #v_loss) 
     
     def train_batches(self):
         self.net.train()
