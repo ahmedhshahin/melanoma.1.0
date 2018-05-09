@@ -136,29 +136,7 @@ class Training():
                 count = 0
         return epoch_loss/(i+1)
 
-    def train_on_val_batches(self):
-        self.net.train()
-        epoch_loss = 0.0
-        batch_loss = None
-        count = 0
-        for i, (images, labels) in enumerate(self.train_loader2):  
-            # Convert torch tensor to Variable
-            images = Variable(images.cuda(self.cuda_device))
-            labels = Variable(labels.cuda(self.cuda_device))
 
-            # Forward + Backward + Optimize
-            self.optimizer.zero_grad()  # zero the gradient buffer
-            out5 = self.net(images)
-            #aux_loss = self.criterion(out1, labels) + self.criterion(out2, labels) + self.criterion(out3, labels) + self.criterion(out4, labels)
-            final_layer_loss = self.criterion(out5, labels)
-            count += 1
-            loss = final_layer_loss / self.max_count
-            loss.backward()
-            epoch_loss += final_layer_loss.data[0]
-            if count == self.max_count:
-                self.optimizer.step()
-                count = 0
-        return epoch_loss/(i+1)
     
     def val_batches(self):
         self.net.eval()
@@ -175,31 +153,6 @@ class Training():
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
         mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
         return mean_loss[0]
-
-    def val_batches_with_aug(self):
-        self.net.eval()
-        # Test the Model
-        # m = self.n - int(self.n*0.75)
-        pred = np.zeros((self.dataset_val.__len__(), 512 * 512))
-        y = np.zeros((self.dataset_val.__len__(), 512 * 512), dtype = np.uint8)
-        cnt = 0
-        op = -1
-        for img, labels in self.val_loader:
-            images = Variable(img, requires_grad=False).cuda(self.cuda_device)
-            out = self.net(images).cpu().data.numpy().reshape(512, 512)
-            if op < 2:
-                out = cv2.flip(out, op)
-            pred[cnt] += out.flatten()
-            if op == 2:
-                y[cnt] = labels.cpu().numpy().astype(np.uint8)[0].flatten()
-            op += 1
-            if op > 2:
-                cnt += 1
-                op = -1
-        pred /= 4
-        # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
-        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
-        return mean_loss
         
     def predict_test(self, save_dir, thresh, batch_size = 1):
         self.net.eval()

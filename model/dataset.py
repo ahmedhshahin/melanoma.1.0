@@ -7,6 +7,7 @@ from scipy import misc
 from PIL import Image
 from torch.utils.data import DataLoader
 import os
+from utils import *
 
 class Melanoma(Dataset):
 
@@ -15,9 +16,9 @@ class Melanoma(Dataset):
 		self.transforms = transforms
 		self.is_test = is_test
 
-		img_folder = np.array(sorted(glob.glob(data_path + 'image/*')))
-		label_folder = np.array(sorted(glob.glob(data_path + 'label/*')))
-		test_folder = np.array(sorted(glob.glob(test_path + 'image/*')))
+		img_folder = np.array(sorted(glob.glob(data_path + '/*.jpg')))
+		label_folder = np.array(sorted(glob.glob(data_path + '/*.png')))
+		test_folder = np.array(sorted(glob.glob(test_path + '/*.jpg')))
 		if is_test:
 			# self.img_names = [f for f in os.listdir(test_path) if (os.path.isfile(os.path.join(test_path, f)))]
 			self.img_names = test_folder
@@ -25,6 +26,7 @@ class Melanoma(Dataset):
 
 
 		n_total = len(img_folder)
+		print(n_total)
 
 		np.random.seed(231)
 
@@ -49,10 +51,13 @@ class Melanoma(Dataset):
 
 		if self.is_test:
 			img = misc.imread(self.imgs[index])
+			# img = 
 			label = None
 		else:
 			img = Image.open(self.imgs[index])
+			img = padding(img, 512)
 			label = np.array(Image.open(self.labels[index]))
+			label = padding(label, 512)
 			
 			label[label > 128] = 255 
 			label[label <= 128] = 0
@@ -70,9 +75,15 @@ class Melanoma(Dataset):
 
 if __name__ == '__main__':
     transformations = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.51892472, 0.4431646,  0.40640972], [0.37666158, 0.33505249, 0.32253156])])
-    dset_train = melanomaData('/home/ahmed/github/melanoma.1.0/dataset/2016data/train/', transformations, is_train=True)
-    dset_val = melanomaData('/home/ahmed/github/melanoma.1.0/dataset/2016data/train/', transformations, is_train=False)
+    dset_train = Melanoma('/home/ahmed/melanoma_data/train_img_label16/', '/home/ahmed/melanoma_data/2016 Test/', transformations, is_train=True)
+    # dset_val = Melanoma('/home/ahmed/github/melanoma.1.0/dataset/2016data/train/', 'home/ahmed/Desktop/',transformations, is_train=False)
     train_dloader = DataLoader(dset_train, batch_size=4, shuffle=True, num_workers=4)
-    val_dloader = DataLoader(dset_val, batch_size=1, shuffle=True, num_workers=4)
-
+    # val_dloader = DataLoader(dset_val, batch_size=1, shuffle=True, num_workers=4)
+    for img, label in train_dloader:
+    	i = np.transpose(img[0], (1,2,0))
+    	print(i.shape)
+    	print(label[0].shape)
+    	misc.imshow(i)
+    	misc.imshow(label[0])
+    	break
  
