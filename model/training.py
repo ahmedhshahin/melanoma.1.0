@@ -119,7 +119,7 @@ class Training():
         epoch_loss = 0.0
         batch_loss = None
         count = 0
-        for i, (images, labels) in enumerate(self.train_loader):  
+        for i, (images, labels, _) in enumerate(self.train_loader):  
             # Convert torch tensor to Variable
             images = Variable(images.cuda(self.cuda_device))
             labels = Variable(labels.cuda(self.cuda_device))
@@ -145,21 +145,25 @@ class Training():
         # Test the Model
         # m = self.n - int(self.n*0.75)
         pred = np.zeros((self.dataset_val.__len__(), 512 , 512))
-        y = np.zeros((self.dataset_val.__len__(), 512 , 512), dtype = np.uint8)
+        # y = np.zeros((self.dataset_val.__len__(), 512 , 512), dtype = np.uint8)
+        y = []
+        orgn_size = []
         cnt = 0
-        for images, labels in self.val_loader:
+        for images, labels, size in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
-            pred[cnt:cnt+4] = self.net(images).cpu().data.numpy()#.reshape(4, -1)
-            y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8)#.reshape(4, -1)
-            cnt += 4
+            pred[cnt:cnt+1] = self.net(images).cpu().data.numpy()#.reshape(4, -1)
+            # y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8)#.reshape(4, -1)
+            y.append(labels.cpu().numpy().astype(np.uint8))
+            orgn_size.append(size)
+            cnt += 1
         # pred_orgn_size = []
         # label_orgn_size = []
         score = 0.0
         for p in range(pred.shape[0]):
-            img = rev_padding(pred[p])
+            img = rev_padding(pred[p], orgn_size[p])
             temp = np.zeros(img.shape)
             temp[img >= 0.5] = 1
-            label = rev_padding(y[p])
+            label = rev_padding(y[p], orgn_size[p])
             score += calc_jaccard(temp, label)
         mean_loss = score / pred.shape[0]
 

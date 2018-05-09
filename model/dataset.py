@@ -56,6 +56,8 @@ class Melanoma(Dataset):
 			label = None
 		else:
 			img = Image.open(self.imgs[index])
+			w, h = img.size
+			orgn_size = [h, w]
 			img = padding(img, 512)
 			label = np.array(Image.open(self.labels[index]))
 			label = padding(label, 512)
@@ -69,7 +71,7 @@ class Melanoma(Dataset):
 			if self.transforms is not None:
 				img = self.transforms(img)
 
-		return(img, label)
+		return(img, label, orgn_size)
 
 	def __len__(self):
 		return self.N
