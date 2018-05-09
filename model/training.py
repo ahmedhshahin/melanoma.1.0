@@ -172,14 +172,18 @@ class Training():
         print(pred.mean())
         print(pred.min())
         print(pred.max())
-        score = 0.0
-        for p in range(pred.shape[0]):
-            img = rev_padding(pred[p][0], orgn_size[p])
-            temp = np.zeros(img.shape)
-            temp[img >= 0.5] = 1
-            label = rev_padding(y[p][0], orgn_size[p])
-            score += calc_jaccard(temp, label)
-        mean_loss = score / pred.shape[0]
+        max_score = 0
+        for thresh in [0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8]:
+            score = 0.0
+            for p in range(pred.shape[0]):
+                img = rev_padding(pred[p][0], orgn_size[p])
+                temp = np.zeros(img.shape)
+                temp[img >= thresh] = 1
+                label = rev_padding(y[p][0], orgn_size[p])
+                score += calc_jaccard(temp, label)
+                if max_score < score:
+                    max_score = score
+        mean_loss = max_score / (pred.shape[0]
 
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
