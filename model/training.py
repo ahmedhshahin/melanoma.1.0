@@ -160,16 +160,16 @@ class Training():
         pred = np.zeros((self.val_loader.dataset.__len__(), 1 , 512 , 512))
         # y = np.zeros((self.dataset_val.__len__(), 512 , 512), dtype = np.uint8)
         y = []
-        orgn_size = []
+        orgn_size = np.zeros((self.val_loader.dataset.__len__(), 1, 2))
         cnt = 0
-        for images, labels, size in self.val_loader:
+        for i, (images, labels, size) in enumerate(self.val_loader):
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
             pred[cnt:cnt+images.size(0)] = self.net(images).cpu().data.numpy()#.reshape(4, -1)
             # y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8)#.reshape(4, -1)
             y.append(labels.cpu().numpy().astype(np.uint8))
-            print(size)
-            orgn_size.append(size)
+            orgn_size[i] = size
             cnt += images.size(0)
+        print(orgn_size)
         # pred_orgn_size = []
         # label_orgn_size = []
         score = 0.0
