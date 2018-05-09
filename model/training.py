@@ -111,14 +111,14 @@ class Training():
             self.train_loss_hist.append(t_loss)
             if self.overfit_mode:
                 return t_loss
-            # v_loss = self.val_batches()
-            # self.val_loss_hist.append(v_loss)
-            # if self.best_val < np.max(v_loss):
-            #     self.best_val = np.max(v_loss)
-            #     self.save_checkpoint(e, self.best_val)
-            #     print('saved')
+            v_loss = self.val_batches()
+            self.val_loss_hist.append(v_loss)
+            if self.best_val < np.max(v_loss):
+                self.best_val = np.max(v_loss)
+                self.save_checkpoint(e, self.best_val)
+                print('saved')
             t2 = time()
-            print(e, (t2-t1)/60.0, t_loss)#, v_loss) 
+            print(e, (t2-t1)/60.0, t_loss, v_loss) 
     
     def train_batches(self):
         self.net.train()
@@ -151,7 +151,7 @@ class Training():
         # Test the Model
         # m = self.n - int(self.n*0.75)
         # pred = np.zeros((self.dataset_val.__len__(), 512 , 512))
-        pred = np.zeros((self.val_loader.dataset.__len__(), 512 , 512))
+        pred = np.zeros((self.val_loader.dataset.__len__(), 1 , 512 , 512))
         # y = np.zeros((self.dataset_val.__len__(), 512 , 512), dtype = np.uint8)
         y = []
         orgn_size = []
@@ -167,7 +167,7 @@ class Training():
         # label_orgn_size = []
         score = 0.0
         for p in range(pred.shape[0]):
-            img = rev_padding(pred[p], orgn_size[p])
+            img = rev_padding(pred[p][0], orgn_size[p])
             temp = np.zeros(img.shape)
             temp[img >= 0.5] = 1
             label = rev_padding(y[p][0], orgn_size[p])

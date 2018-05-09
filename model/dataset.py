@@ -20,8 +20,6 @@ class Melanoma(Dataset):
 		img_folder = np.array(sorted(glob.glob(data_path + '/*.jpg')))
 		label_folder = np.array(sorted(glob.glob(data_path + '/*.png')))
 		test_folder = np.array(sorted(glob.glob(test_path + '/*.jpg')))
-		print(img_folder)
-		print(label_folder)
 		if is_test:
 			# self.img_names = [f for f in os.listdir(test_path) if (os.path.isfile(os.path.join(test_path, f)))]
 			self.img_names = test_folder
