@@ -93,13 +93,13 @@ def rev_padding(img, orgn_size):
     ratio = b * 1.0 / a
     if len(img.shape) == 3:
         if ratio < 1.35:
-            new_b = math.ceil(b * (1.35/ratio))
+            new_b = int(math.ceil(b * (1.35/ratio)))
             if (new_b % 2 == 1): new_b += 1
             img_sq = misc.imresize(img, (new_b, new_b, 3))
             output = img_sq[(new_b-a)//2:(new_b+a)//2, :, :]
             origin = output[:, (new_b-b)//2:(new_b+b)//2, :]
         else:
-            new_a = math.ceil(a * (ratio / 1.35))
+            new_a = int(math.ceil(a * (ratio / 1.35)))
             if (new_a % 2 == 1): new_a += 1
             if new_a > b:
                 img_sq = misc.imresize(img, (new_a, new_a, 3))
@@ -111,13 +111,13 @@ def rev_padding(img, orgn_size):
                 origin = output[(new_a-a)//2:(new_a+a)//2, :, :]
     else:
         if ratio < 1.35:
-            new_b = math.ceil(b * (1.35/ratio))
+            new_b = int(math.ceil(b * (1.35/ratio)))
             if (new_b % 2 == 1): new_b += 1
             img_sq = misc.imresize(img, (new_b, new_b))
             output = img_sq[(new_b-a)//2:(new_b+a)//2, :]
             origin = output[:, (new_b-b)//2:(new_b+b)//2]
         else:
-            new_a = math.ceil(a * (ratio / 1.35))
+            new_a = int(math.ceil(a * (ratio / 1.35)))
             if (new_a % 2 == 1): new_a += 1
             if new_a > b:
                 img_sq = misc.imresize(img, (new_a, new_a))

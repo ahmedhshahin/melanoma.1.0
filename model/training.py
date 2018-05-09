@@ -17,7 +17,6 @@ from torch.autograd import Variable
 import torch.nn.functional as F
 from sklearn.preprocessing import LabelEncoder, LabelBinarizer
 from torch.utils.data import Dataset
-from sklearn.cross_validation import StratifiedKFold, KFold
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics.pairwise import pairwise_distances
 from numpy.linalg import inv, norm
