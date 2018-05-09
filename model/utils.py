@@ -87,7 +87,8 @@ def padding(img, new_dim):
 
 def rev_padding(img, orgn_size):
     a, b = orgn_size[:2]
-    i, j = img.shape[:2]
+    # i, j = img.shape[:2]
+    img = img[0, ...]
     a = a.item()
     b = b.item()
     ratio = b * 1.0 / a
@@ -95,7 +96,7 @@ def rev_padding(img, orgn_size):
         if ratio < 1.35:
             new_b = int(math.ceil(b * (1.35/ratio)))
             if (new_b % 2 == 1): new_b += 1
-            print(img.shape)
+            print(img.shape, i)
             img_sq = misc.imresize(img, (new_b, new_b, 3))
             output = img_sq[(new_b-a)//2:(new_b+a)//2, :, :]
             origin = output[:, (new_b-b)//2:(new_b+b)//2, :]
