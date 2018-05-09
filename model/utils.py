@@ -44,6 +44,7 @@ def padding(img, new_dim):
             # pad b
             new_b = math.ceil(b * (1.35 / ratio))
             if (new_b % 2 == 1): new_b += 1
+            print(a, new_b)
             output = np.zeros((a, new_b, 3))
             output[:, (new_b-b)//2 : (new_b+b)//2 , :] = img
             output_sq = np.zeros((new_b, new_b, 3))
