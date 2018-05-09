@@ -160,7 +160,7 @@ class Training():
         pred = np.zeros((self.val_loader.dataset.__len__(), 1 , 512 , 512))
         # y = np.zeros((self.dataset_val.__len__(), 512 , 512), dtype = np.uint8)
         y = []
-        orgn_size = np.zeros((self.val_loader.dataset.__len__(), 1, 2))
+        orgn_size = []
         cnt = 0
         for images, labels, size in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
