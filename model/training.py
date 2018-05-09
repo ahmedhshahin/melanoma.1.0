@@ -169,9 +169,6 @@ class Training():
             y.append(labels.cpu().numpy().astype(np.uint8))
             orgn_size.append(size)
             cnt += images.size(0)
-        print(pred.mean())
-        print(pred.min())
-        print(pred.max())
         max_score = 0
         for thresh in [0.5]:
             score = 0.0
