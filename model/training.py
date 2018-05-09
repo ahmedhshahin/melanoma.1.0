@@ -159,7 +159,7 @@ class Training():
         pred = np.zeros((self.val_loader.dataset.__len__(), 1 , 512 , 512))
         # y = np.zeros((self.dataset_val.__len__(), 512 , 512), dtype = np.uint8)
         y = []
-        print(pred.shape)
+        print(images.size(0))
         orgn_size = []
         cnt = 0
         for images, labels, size in self.val_loader:
