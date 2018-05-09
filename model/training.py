@@ -86,6 +86,9 @@ class Training():
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
         self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
         self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
+
+        if self.overfit_mode:
+            self.val_loader = self.train_loader
         # for x, y, _ in self.train_loader:
         #     print(x.shape)
         #     print(y.shape)
@@ -109,8 +112,8 @@ class Training():
             t1 = time()
             t_loss = self.train_batches()
             self.train_loss_hist.append(t_loss)
-            if self.overfit_mode:
-                return t_loss
+            # if self.overfit_mode:
+            #     return t_loss
             v_loss = self.val_batches()
             self.val_loss_hist.append(v_loss)
             if self.best_val < np.max(v_loss):
