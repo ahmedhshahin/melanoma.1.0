@@ -107,7 +107,7 @@ class Training():
         for e in range(n_epochs):
             print("Epoch {0} / {1} :".format(e, n_epochs))
             t1 = time()
-            t_loss = self.train_batches()
+            t_loss, t_acc = self.train_batches()
             self.train_loss_hist.append(t_loss)
             if self.overfit_mode:
                 return t_loss
@@ -118,7 +118,7 @@ class Training():
                 self.save_checkpoint(e, self.best_val)
                 print('saved')
             t2 = time()
-            print(e, (t2-t1)/60.0, t_loss, v_loss) 
+            print(e, (t2-t1)/60.0, t_loss, t_acc, v_loss) 
     
     def train_batches(self):
         self.net.train()
@@ -135,6 +135,7 @@ class Training():
             out5 = self.net(images)
             #aux_loss = self.criterion(out1, labels) + self.criterion(out2, labels) + self.criterion(out3, labels) + self.criterion(out4, labels)
             final_layer_loss = self.criterion(out5, labels)
+            t_acc = calc_jaccard((out5 > 0.5), labels)
             count += 1
             loss = final_layer_loss / self.max_count
             loss.backward()
@@ -142,7 +143,7 @@ class Training():
             if count == self.max_count:
                 self.optimizer.step()
                 count = 0
-        return epoch_loss/(i+1)
+        return epoch_loss/(i+1), t_acc
 
 
     
