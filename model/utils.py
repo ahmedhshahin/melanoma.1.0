@@ -42,15 +42,14 @@ def padding(img, new_dim):
     if len(img.shape) == 3:
         if ratio < 1.35:
             # pad b
-            new_b = math.ceil(b * (1.35 / ratio))
+            new_b = int(math.ceil(b * (1.35 / ratio)))
             if (new_b % 2 == 1): new_b += 1
-            print(a, new_b)
             output = np.zeros((a, new_b, 3))
             output[:, (new_b-b)//2 : (new_b+b)//2 , :] = img
             output_sq = np.zeros((new_b, new_b, 3))
             output_sq[(new_b-a)//2 : (new_b+a)//2, :, :] = output
         else:
-            new_a = math.ceil(a * (ratio / 1.35))
+            new_a = int(math.ceil(a * (ratio / 1.35)))
             if (new_a % 2 == 1): new_a += 1
             output = np.zeros((new_a, b, 3))
             output[(new_a-a)//2 : (new_a+a)//2, :, :] = img
@@ -65,14 +64,14 @@ def padding(img, new_dim):
     else:
         if ratio < 1.35:
             # pad b
-            new_b = math.ceil(b * (1.35 / ratio))
+            new_b = int(math.ceil(b * (1.35 / ratio)))
             if (new_b % 2 == 1): new_b += 1
             output = np.zeros((a, new_b))
             output[:, (new_b-b)//2 : (new_b+b)//2] = img
             output_sq = np.zeros((new_b, new_b))
             output_sq[(new_b-a)//2 : (new_b+a)//2, :] = output
         else:
-            new_a = math.ceil(a * (ratio / 1.35))
+            new_a = int(math.ceil(a * (ratio / 1.35)))
             if (new_a % 2 == 1): new_a += 1
             output = np.zeros((new_a, b))
             output[(new_a-a)//2 : (new_a+a)//2, :] = img
