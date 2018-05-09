@@ -123,6 +123,7 @@ def rev_padding(img, orgn_size):
                 origin = output[(new_a-a)//2:(new_a+a)//2, :]
             else:
                 img_sq = misc.imresize(img, (b, b))
+                print(a, b, new_a, img_sq)
                 output = img_sq[(b-new_a)//2:(b+new_a)//2, :]
                 origin = output[(new_a-a)//2:(new_a+a)//2, :]
     return origin
