@@ -38,7 +38,7 @@ def padding(img, new_dim):
     if type(img) is PIL.JpegImagePlugin.JpegImageFile:
         img = np.array(img)
     a, b = img.shape[:2]
-    ratio = b / a
+    ratio = b*1.0 / a
     if len(img.shape) == 3:
         if ratio < 1.35:
             # pad b
