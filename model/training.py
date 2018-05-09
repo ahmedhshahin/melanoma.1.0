@@ -180,10 +180,7 @@ class Training():
                 temp = np.zeros(img.shape)
                 temp[img >= thresh] = 1
                 label = rev_padding(y[p][0], orgn_size[p])
-                plt.imsave("/content/l{0}.png".format(p), img)
-                print(np.unique(label))
-                print(label.shape)
-                print(img.shape)
+                plt.imsave("/content/l{0}.png".format(p), temp*255)
                 score += calc_jaccard(temp, label)
                 if max_score < score:
                     max_score = score
