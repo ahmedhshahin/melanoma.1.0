@@ -162,6 +162,7 @@ class Training():
             img = rev_padding(pred[p], orgn_size[p])
             temp = np.zeros(img.shape)
             temp[img >= 0.5] = 1
+            print("y[p]", y[p].shape)
             label = rev_padding(y[p], orgn_size[p])
             score += calc_jaccard(temp, label)
         mean_loss = score / pred.shape[0]
