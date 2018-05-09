@@ -159,7 +159,7 @@ class Training():
         y = []
         orgn_size = []
         cnt = 0
-        for images, labels, size in self.val_loader:
+        for images, labels, size in self.train_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
             pred[cnt:cnt+images.size(0)] = self.net(images).cpu().data.numpy()#.reshape(4, -1)
             # y[cnt:cnt+4] = labels.cpu().numpy().astype(np.uint8)#.reshape(4, -1)
