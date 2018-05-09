@@ -27,7 +27,6 @@ class Melanoma(Dataset):
 
 
 		n_total = len(img_folder)
-		print(n_total)
 
 		np.random.seed(231)
 
