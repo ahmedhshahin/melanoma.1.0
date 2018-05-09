@@ -45,7 +45,6 @@ class Melanoma(Dataset):
 
 
 		self.N = len(self.imgs)
-		print(self.N)
 # mean is [0.51892472 0.4431646  0.40640972]
 # mean is [0.37666158 0.33505249 0.32253156]
 

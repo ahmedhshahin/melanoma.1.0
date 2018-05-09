@@ -91,7 +91,7 @@ class Training():
         if self.overfit_mode:
             self.val_loader = self.train_loader
 
-        
+        print(self.val_loader.__len__())
         # for x, y, _ in self.train_loader:
         #     print(x.shape)
         #     print(y.shape)
