@@ -170,6 +170,7 @@ class Training():
         # label_orgn_size = []
         score = 0.0
         for p in range(pred.shape[0]):
+            print(p, pred.shape[0], len(orgn_size))
             img = rev_padding(pred[p][0], orgn_size[p])
             temp = np.zeros(img.shape)
             temp[img >= 0.5] = 1
