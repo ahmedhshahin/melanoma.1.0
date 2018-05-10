@@ -28,7 +28,7 @@ from sklearn.utils import class_weight
 
 class Training():
     def __init__(self, model, model_params, criterion, val_metric, initial_lr, dataset, dataset_params, batch_size_train, train_steps_before_update, batch_size_val, cuda_device, test_mode = False, overfit_mode = False, data_parallel = False):
-        self.net = model(**model_params)
+        # self.net = model(**model_params)
         self.net = model(3,1)
         self.net = nn.DataParallel(self.net)
         self.criterion = criterion
