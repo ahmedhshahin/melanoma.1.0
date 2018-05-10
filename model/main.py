@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.metrics import jaccard_similarity_score
 from utils import val_metric, soft_dice_loss
 import torch
-from pytorch.unet import UNet
+from unet import UNet
 
 #torch.backends.cudnn.benchmark = True
 transformations = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.51892472, 0.4431646,  0.40640972], [0.37666158, 0.33505249, 0.32253156])])
