@@ -142,8 +142,8 @@ class Training():
             self.optimizer.zero_grad()  # zero the gradient buffer
             out5 = self.net(images)
             #aux_loss = self.criterion(out1, labels) + self.criterion(out2, labels) + self.criterion(out3, labels) + self.criterion(out4, labels)
-            print(torch.unique(labels))
-            weights = class_weight.compute_class_weight('balanced', torch.unique(labels), labels)
+            print(np.unique(labels.cpu.data.numpy()))
+            weights = class_weight.compute_class_weight('balanced', np.unique(labels.cpu.data.numpy()), labels)
             local_criterion = self.criterion(weights)
             final_layer_loss = local_criterion(out5, labels)
             count += 1
