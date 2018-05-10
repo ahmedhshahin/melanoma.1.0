@@ -14,8 +14,11 @@ def val_metric(y, p, thresh):
     pred[np.where(p >= thresh)] = 1
     score = 0.0
     for i in range(y.shape[0]):
-        score += calc_jaccard(y[i], pred[i])
+        score += calc_dice(y[i], pred[i])
     return score/y.shape[0]
+
+def calc_dice(x,y):
+    return ((np.sum(x[y == 1]) * 2) / (np.sum(x) + np.sum(y))) * 100
 
 def calc_jaccard(x,y):
     eps = 1e-9
