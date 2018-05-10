@@ -119,7 +119,7 @@ class Training():
             self.train_loss_hist.append(t_loss)
             # if self.overfit_mode:
             #     return t_loss
-            v_loss = self.val_batches()
+            v_loss = self.val_batches_k()
             self.val_loss_hist.append(v_loss)
             if self.best_val < np.max(v_loss):
                 self.best_val = np.max(v_loss)
@@ -198,6 +198,22 @@ class Training():
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
         return mean_loss
         
+    def val_batches_k(self):
+        self.net.eval()
+        # Test the Model
+        # m = self.n - int(self.n*0.75)
+        pred = np.zeros((self.val_loader.dataset.__len__(), 512 * 512))
+        y = np.zeros((self.val_loader.dataset.__len__(), 512 * 512), dtype = np.uint8)
+        cnt = 0
+        for images, labels in self.val_loader:
+            images = Variable(images, requires_grad=False).cuda(self.cuda_device)
+            pred[cnt] = self.net(images).cpu().data.numpy().reshape(1, -1)
+            y[cnt] = labels.cpu().numpy().astype(np.uint8).reshape(1, -1)
+            cnt += 1
+        mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
+        return mean_loss
+
+
     def predict_test(self, save_dir, thresh, batch_size = 1):
         self.net.eval()
         # test_params = self.dataset_params
