@@ -175,7 +175,8 @@ class Training():
             orgn_size.append(size)
             cnt += images.size(0)
         max_score = 0
-        for thresh in [0.5]:
+        for th in range(5, 100, 5):
+            thresh = th /100.0
             score = 0.0
             for p in range(pred.shape[0]):
                 img = rev_padding(pred[p][0], orgn_size[p]) / 255.0
