@@ -211,7 +211,7 @@ class Training():
             y[cnt] = labels.cpu().numpy().astype(np.uint8).reshape(1, -1)
             cnt += 1
         mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
-        return mean_loss
+        return mean_loss.max()
 
 
     def predict_test(self, save_dir, thresh, batch_size = 1):
