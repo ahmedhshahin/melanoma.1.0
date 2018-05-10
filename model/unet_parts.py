@@ -51,9 +51,6 @@ class down(nn.Module):
 class up(nn.Module):
     def __init__(self, in_ch, out_ch, bilinear=True):
         super(up, self).__init__()
-
-        #  would be a nice idea if the upsampling could be learned too,
-        #  but my machine do not have enough memory to handle all those weights
         if bilinear:
             self.up = nn.UpsamplingBilinear2d(scale_factor=2)
         else:
