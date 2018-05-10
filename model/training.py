@@ -205,7 +205,7 @@ class Training():
         pred = np.zeros((self.val_loader.dataset.__len__(), 512 * 512))
         y = np.zeros((self.val_loader.dataset.__len__(), 512 * 512), dtype = np.uint8)
         cnt = 0
-        for images, labels in self.val_loader:
+        for images, labels, _ in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
             pred[cnt] = self.net(images).cpu().data.numpy().reshape(1, -1)
             y[cnt] = labels.cpu().numpy().astype(np.uint8).reshape(1, -1)
