@@ -23,6 +23,8 @@ from numpy.linalg import inv, norm
 import cv2
 from time import time
 from utils import *
+from sklearn.utils import class_weight
+
 
 class Training():
     def __init__(self, model, model_params, criterion, val_metric, initial_lr, dataset, dataset_params, batch_size_train, train_steps_before_update, batch_size_val, cuda_device, test_mode = False, overfit_mode = False, data_parallel = False):
@@ -140,7 +142,9 @@ class Training():
             self.optimizer.zero_grad()  # zero the gradient buffer
             out5 = self.net(images)
             #aux_loss = self.criterion(out1, labels) + self.criterion(out2, labels) + self.criterion(out3, labels) + self.criterion(out4, labels)
-            final_layer_loss = self.criterion(out5, labels)
+            weights = class_weight.compute_class_weight('balanced', np.unique(labels), labels)
+            local_criterion = self.criterion(weights)
+            final_layer_loss = local_criterion(out5, labels)
             count += 1
             loss = final_layer_loss / self.max_count
             loss.backward()
