@@ -179,14 +179,16 @@ class Training():
             thresh = th /100.0
             score = 0.0
             for p in range(pred.shape[0]):
-                img = rev_padding(pred[p][0], orgn_size[p]) / 255.0
+                # img = rev_padding(pred[p][0], orgn_size[p]) / 255.0
+                img = pred[p]
                 # print(img.mean())
                 # print(img.min())
                 # print(img.max())
                 temp = np.zeros(img.shape)
                 temp[img >= thresh] = 1
-                label = rev_padding(y[p][0], orgn_size[p])
-                plt.imsave("/content/l{0}.png".format(p), img)
+                # label = rev_padding(y[p][0], orgn_size[p])
+                label = y[p]
+                # plt.imsave("/content/l{0}.png".format(p), img)
                 score += calc_jaccard(temp, label)
                 if max_score < score:
                     max_score = score
