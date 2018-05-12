@@ -183,12 +183,12 @@ class Training():
             for p in range(pred.shape[0]):
                 img = rev_padding(pred[p][0], orgn_size[p]) / 255.0
                 # img = pred[p].reshape(1, -1)
-                print(img.mean())
-                print(img.min())
-                print(img.max())
                 temp = np.zeros(img.shape)
                 temp[img >= thresh] = 1
                 label = rev_padding(y[p][0], orgn_size[p])
+                print(label.mean())
+                print(label.min())
+                print(label.max())
                 # label = y[p].reshape(1, -1)
                 # plt.imsave("/content/l{0}.png".format(p), img)
                 score += calc_jaccard(temp, label)
