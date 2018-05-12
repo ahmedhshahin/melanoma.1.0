@@ -87,8 +87,8 @@ class Training():
         self.dataset_test = dataset(**test_params)
 
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
-        # self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
-        # self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
+        self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
+        self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
 
 
         if self.overfit_mode:
@@ -120,7 +120,7 @@ class Training():
             self.train_loss_hist.append(t_loss)
             # if self.overfit_mode:
             #     return t_loss
-            v_loss = self.val_batches_k()
+            v_loss = self.val_batches()
             self.val_loss_hist.append(v_loss)
             if self.best_val < np.max(v_loss):
                 self.best_val = np.max(v_loss)
@@ -176,23 +176,23 @@ class Training():
             orgn_size.append(size)
             cnt += images.size(0)
         max_score = 0
-        for th in range(5, 100, 5):
-            thresh = th /100.0
+        for thresh in [0.5]:
+            # thresh = th /100.0
             score = 0.0
             for p in range(pred.shape[0]):
-                # img = rev_padding(pred[p][0], orgn_size[p]) / 255.0
-                img = pred[p].reshape(1, -1)
+                img = rev_padding(pred[p][0], orgn_size[p]) / 255.0
+                # img = pred[p].reshape(1, -1)
                 # print(img.mean())
                 # print(img.min())
                 # print(img.max())
                 temp = np.zeros(img.shape)
                 temp[img >= thresh] = 1
-                # label = rev_padding(y[p][0], orgn_size[p])
-                label = y[p].reshape(1, -1)
+                label = rev_padding(y[p][0], orgn_size[p])
+                # label = y[p].reshape(1, -1)
                 # plt.imsave("/content/l{0}.png".format(p), img)
                 score += calc_jaccard(temp, label)
-                if max_score < score:
-                    max_score = score
+                # if max_score < score:
+                    # max_score = score
         mean_loss = max_score / pred.shape[0]
 
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
@@ -224,7 +224,7 @@ class Training():
         # test_params['idx'] = None
         # test_dataset = self.dataset(**test_params)
         test_loader = self.test_loader
-        img_names = [name.split('_')[0] for name in test_dataset.img_names]
+        img_names = [name.split('_')[0] for name in self.dataset_test.img_names]
         for i, img in enumerate(test_loader):
             img = Variable(img, requires_grad=False).cuda(self.cuda_device)
             prob = self.net(img).cpu().data.numpy().reshape((512,512))
