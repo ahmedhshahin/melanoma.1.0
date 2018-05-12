@@ -87,8 +87,8 @@ class Training():
         self.dataset_test = dataset(**test_params)
 
         self.train_loader = torch.utils.data.DataLoader(self.dataset_train, batch_size=batch_size_train, shuffle=True)
-        self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
-        self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
+        # self.val_loader = torch.utils.data.DataLoader(self.dataset_val, batch_size=batch_size_val, shuffle=False)
+        # self.test_loader = torch.utils.data.DataLoader(self.dataset_test, batch_size=1, shuffle=False)
 
 
         if self.overfit_mode:
