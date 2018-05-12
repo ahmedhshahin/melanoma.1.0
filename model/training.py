@@ -176,6 +176,7 @@ class Training():
             orgn_size.append(size)
             cnt += images.size(0)
         max_score = 0
+        print(pred.shape)
         for thresh in [0.5]:
             # thresh = th /100.0
             score = 0.0
