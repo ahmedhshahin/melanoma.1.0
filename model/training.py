@@ -208,7 +208,7 @@ class Training():
         cnt = 0
         for images, labels, _ in self.val_loader:
             images = Variable(images, requires_grad=False).cuda(self.cuda_device)
-            pred[cnt] = F.sigmoid(self.net(images)).cpu().data.numpy().reshape(1, -1)
+            pred[cnt] = self.net(images).cpu().data.numpy().reshape(1, -1)
             y[cnt] = labels.cpu().numpy().astype(np.uint8).reshape(1, -1)
             cnt += 1
         mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
