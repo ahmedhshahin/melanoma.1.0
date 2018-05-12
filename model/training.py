@@ -175,8 +175,6 @@ class Training():
             y.append(labels.cpu().numpy().astype(np.uint8))
             orgn_size.append(size)
             cnt += images.size(0)
-        max_score = 0
-        print(pred.shape)
         for thresh in [0.5]:
             # thresh = th /100.0
             score = 0.0
@@ -186,15 +184,15 @@ class Training():
                 temp = np.zeros(img.shape)
                 temp[img >= thresh] = 1
                 label = rev_padding(y[p][0], orgn_size[p])
-                print(label.mean())
-                print(label.min())
-                print(label.max())
+                # print(label.mean())
+                # print(label.min())
+                # print(label.max())
                 # label = y[p].reshape(1, -1)
                 # plt.imsave("/content/l{0}.png".format(p), img)
                 score += calc_jaccard(temp, label)
                 # if max_score < score:
                     # max_score = score
-        mean_loss = max_score / pred.shape[0]
+        mean_loss = score / pred.shape[0]
 
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]]
         # mean_loss = [self.val_metric(y, pred, thresh) for thresh in [0.5]]
