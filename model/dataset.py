@@ -31,7 +31,7 @@ class Melanoma(Dataset):
 		np.random.seed(231)
 
 		# val_idx = np.random.choice(n_total, int(0.2 * n_total), replace=False)
-		val_idx = np.random.choice(n_total, int(0.0 * n_total), replace=False)
+		val_idx = np.random.choice(n_total, int(0.2 * n_total), replace=False)
 		train_idx = np.array([idx for idx in range(n_total) if not idx in val_idx ])
 
 		if is_train:
