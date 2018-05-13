@@ -38,8 +38,8 @@ def soft_dice_loss(inputs, targets):
     return score
 
 def padding(img, new_dim):
-    if type(img) is PIL.JpegImagePlugin.JpegImageFile:
-        img = np.array(img)
+    # if type(img) is PIL.JpegImagePlugin.JpegImageFile:
+        # img = np.array(img)
     a, b = img.shape[:2]
     ratio = b*1.0 / a
     if len(img.shape) == 3:
@@ -63,7 +63,7 @@ def padding(img, new_dim):
                 output_sq = np.zeros((b,b,3))
                 output_sq[(b-new_a)//2 : (b+new_a)//2, :, :] = output
         output_sq = misc.imresize(output_sq, (new_dim,new_dim,3))
-        output_sq = Image.fromarray(output_sq)
+        # output_sq = Image.fromarray(output_sq)
     else:
         if ratio < 1.35:
             # pad b
