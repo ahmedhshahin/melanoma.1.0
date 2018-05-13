@@ -134,7 +134,7 @@ class Training():
         epoch_loss = 0.0
         batch_loss = None
         count = 0
-        for i, (images, labels, _) in enumerate(self.train_loader):  
+        for i, (images, labels) in enumerate(self.train_loader):  
             # Convert torch tensor to Variable
             images = Variable(images.cuda(self.cuda_device))
             labels = Variable(labels.cuda(self.cuda_device))
