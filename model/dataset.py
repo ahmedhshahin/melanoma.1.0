@@ -11,7 +11,7 @@ from utils import *
 
 class Melanoma(Dataset):
 
-	def __init__(self, data_path, test_path, img_dim,transforms=None, is_train=True, is_test=False):
+	def __init__(self, data_path, test_path, sizes_array, img_dim,transforms=None, is_train=True, is_test=False):
 		
 		self.transforms = transforms
 		self.is_test = is_test
@@ -20,6 +20,7 @@ class Melanoma(Dataset):
 		img_folder = np.array(sorted(glob.glob(data_path + '/*.jpg')))
 		label_folder = np.array(sorted(glob.glob(data_path + '/*.png')))
 		test_folder = np.array(sorted(glob.glob(test_path + '/*.jpg')))
+		sizes = np.load(sizes_array)
 
 		n_total = len(img_folder)
 
@@ -31,6 +32,7 @@ class Melanoma(Dataset):
 		train_label_names = label_folder[train_idx]
 		val_img_names = img_folder[val_idx]
 		val_label_names = label_folder[val_idx]
+		self.val_sizes = sizes[val_idx]
 
 		if is_test:
 			self.img_names = test_folder
@@ -67,35 +69,53 @@ class Melanoma(Dataset):
 
 		if self.is_test:
 			img = self.imgs[index]
-			label = None
+			img = img.astype(np.float)
+			img /= 255
+			img[0,:,:] -= 0.51892472
+			img[0,:,:] /= 0.37666158
+			img[1,:,:] -= 0.4434646
+			img[1,:,:] /= 0.33505249
+			img[2,:,:] -= 0.40640972
+			img[2,:,:] /= 0.32253156
+			return img
+
+		elif self.is_train:
+			img = self.imgs[index]
+			label = self.labels[index]
+			img = img.astype(np.float)
+			img /= 255
+			img[0,:,:] -= 0.51892472
+			img[0,:,:] /= 0.37666158
+			img[1,:,:] -= 0.4434646
+			img[1,:,:] /= 0.33505249
+			img[2,:,:] -= 0.40640972
+			img[2,:,:] /= 0.32253156
+			return (img, label)
+
 		else:
 			img = self.imgs[index]
 			label = self.labels[index]
-			
-			if self.transforms is not None:
-				img = self.transforms(img)
-
-		img = img.astype(np.float)
-		img /= 255
-		img[0,:,:] -= 0.51892472
-		img[0,:,:] /= 0.37666158
-		img[1,:,:] -= 0.4434646
-		img[1,:,:] /= 0.33505249
-		img[2,:,:] -= 0.40640972
-		img[2,:,:] /= 0.32253156
-
-		return(img, label) #orgn_size)
+			size = self.val_sizes[index]
+			img = img.astype(np.float)
+			img /= 255
+			img[0,:,:] -= 0.51892472
+			img[0,:,:] /= 0.37666158
+			img[1,:,:] -= 0.4434646
+			img[1,:,:] /= 0.33505249
+			img[2,:,:] -= 0.40640972
+			img[2,:,:] /= 0.32253156
+			return(img, label, size)
 
 	def __len__(self):
 		return self.N
 
 
 if __name__ == '__main__':
-    dset_train = Melanoma('/home/ahmed/melanoma_new/training2018_512/', '/home/ahmed/melanoma_data/2016 Test/', img_dim=512, transforms=None, is_train=True)
-    dset_val = Melanoma('/home/ahmed/melanoma_new/training2018_512/', 'home/ahmed/Desktop/', img_dim=512,transforms=None, is_train=False)
+    dset_train = Melanoma('/home/ahmed/melanoma_new/training2018_512/', '/home/ahmed/melanoma_data/2016 Test/', sizes_array="/home/ahmed/melanoma_new/sizes_18.npy" , img_dim=512, transforms=None, is_train=True)
+    dset_val = Melanoma('/home/ahmed/melanoma_new/training2018_512/', 'home/ahmed/Desktop/', sizes_array="/home/ahmed/melanoma_new/sizes_18.npy", img_dim=512,transforms=None, is_train=False)
     train_dloader = DataLoader(dset_train, batch_size=4, shuffle=True, num_workers=4)
     val_dloader = DataLoader(dset_val, batch_size=1, shuffle=True, num_workers=4)
-    for img, label in train_dloader:
+    for img, label, size in val_dloader:
     	print(img.shape)
     	print(label.shape)
     	print(img.mean())
@@ -105,5 +125,6 @@ if __name__ == '__main__':
     	i = np.transpose(img[0], (1,2,0))
     	misc.imshow(i)
     	misc.imshow(label[0]*255)
+    	print(size)
     	break
  
