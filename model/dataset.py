@@ -8,10 +8,11 @@ from PIL import Image
 from torch.utils.data import DataLoader
 import os
 from utils import *
+import cv2
 
 class Melanoma(Dataset):
 
-	def __init__(self, data_path, test_path, sizes_array, img_dim,transforms=None, is_train=True, is_test=False):
+	def __init__(self, data_path, test_path, sizes_array, img_dim, is_train=True, is_test=False):
 		
 		self.transforms = transforms
 		self.is_test = is_test
@@ -65,6 +66,25 @@ class Melanoma(Dataset):
 # mean is [0.51892472 0.4431646  0.40640972]
 # mean is [0.37666158 0.33505249 0.32253156]
 
+
+	def rotateImage(self, image, angle):
+        image_center = (image.shape[0] / 2, image.shape[1] / 2)
+        rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
+        result = cv2.warpAffine(image, rot_mat, image.shape[0:2])
+        return result
+        
+    def flip(self, x, y):
+        op = random.randint(-1,1)
+        x = cv2.flip(x, op)
+        y = cv2.flip(y, op)
+        return (x, y)
+    
+    def rotate(self, x, y):
+        ang = random.randint(-10, 10)
+        x = self.rotateImage(x, ang)
+        y = self.rotateImage(y, ang)
+        return (x, y)
+
 	def __getitem__(self, index):
 
 		if self.is_test:
@@ -90,6 +110,10 @@ class Melanoma(Dataset):
 			img[1,:,:] /= 0.33505249
 			img[2,:,:] -= 0.40640972
 			img[2,:,:] /= 0.32253156
+			prob = random.uniform(0.0,1.0)
+            if prob > 0.5:
+                img, label = self.flip(img, label)
+                img, label = self.rotate(img, label)
 			return (img, label)
 
 		else:
