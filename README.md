@@ -24,14 +24,16 @@ We are investigating different deep neural network architectures to achieve the 
   - Resizing all images to standard input size (256 * 256), because most of the models used required unique input size.
   - Detection and Segmentation of black regions of the image.
   - Dtermining the most informative layer of the RGB layers, in order to decide whether it is better to train with the 3 layers, one of them, or the grayscale images.
+  
+* Our novel model Deep Nevus is now on the repo, our model have shown superior results in segmentation task.
 
 * We are testing our dataset on some deep learning models to get some intuitions about the performance of the various archetictures on our data, that will help us to propose our algorithm.
-  - We have tested u-net, seg-net, and refine-net.
+  - We have tested U-Net, Seg-Net, PSP-Net, and Refine-Net.
   
-* We are looking for a way to combine the low-level features from the spatial resolution with the high level features from the convoloutional path. Hopefully this will yield a better performance on our problem.
 
 ## Technologies Used:
-  - Tesnorflow
+  - PyTorch "Deep Nevus is implemented in PyTorch"
+  - Tensorflow
   - Keras
   - Numpy
   - Scipy
@@ -41,5 +43,5 @@ We are investigating different deep neural network architectures to achieve the 
   
   
 ## Future Work:
-  - Using the metadata of patients, we want to classify each melanoma image into melanoma, nevus or seborrheic keratosis.
+  - Using the metadata of patients, we want to classify each melanoma image into 7 classes of the disease.
   - We aim to combine both imaging modalities; CLM and OCT; and use both information for a detailed and comprehensive analysis. That includes developing a pretreatment automatic segmentation of the melanoma volumetric information to facilitate and standardize the treatment delivery planning. Automation and standardizing the planning step will reduce the manual induced error. Considering information coming from different imaging modalities highlights the expected added value of deep neural networks in fusing medical image based information.
