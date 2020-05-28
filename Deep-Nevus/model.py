@@ -137,32 +137,3 @@ class DeepNevus(nn.Module):
         # print(dec2.size())
         dec1 = self.dec1(torch.cat([dec2, conv1], 1))
         return F.sigmoid(self.final(dec1))
-
-
-class UNet(object):
-    def __init__(self):
-        super(UNet, self).__init__()
-        self.pool = nn.MaxPool2d(2 ,2)
-        self.down1 = ConvRelu(3, 64)
-        self.down2 = ConvRelu(64, 128)
-        self.down3 = ConvRelu(128, 256)
-        self.down4 = ConvRelu(256, 512)
-
-        self.center = DecoderBlock(512, 1024, 512)
-        self.dec3 = DecoderBlock(1024, 512, 256)
-        self.dec2 = DecoderBlock(512, 256, 128)
-        self.dec1 = DecoderBlock(256, 128, 64)
-        
-        self.final = self.final = nn.Sequential(ConvRelu(128, 64), nn.Dropout(0.5), nn.Conv2d(64, 1, kernel_size=1))
-
-    def forward(self, x):
-        d1 = self.down1(x)
-        d2 = self.down2(self.pool(d1))
-        d3 = self.down3(self.pool(d2))
-        d4 = self.down4(self.pool(d3))
-        center = self.center(self.pool(d4))
-
-        u4 = self.dec3(torch.cat([center, d4], 1))
-        u3 = self.dec2(torch.cat([u4, d3], 1))
-        u2 = self.dec1(torch.cat([u3, d2], 1))
-        u1 = self.final(torch.cat([u2, d1], 1))
